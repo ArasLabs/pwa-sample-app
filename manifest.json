@@ -1,0 +1,23 @@
+{
+    "name": "Problem Reporter",
+    "short_name": "Problem Reporter",
+    "icons": [{
+            "src": "images/icons/icon-64x64.png",
+            "sizes": "64x64",
+            "type": "image/png"
+        }, {
+            "src": "images/icons/icon-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "images/icons/icon-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#ebe9e9",
+    "theme_color": "#ebe9e9"
+}
