@@ -1,17 +1,17 @@
 var cacheName = 'problemReporter';
 var dataCacheName = 'problemReporterData';
 var filesToCache = [
-    '/favicon.ico',
-    '/styles/error.css',
-    '/images/icons/icon-16x16.png',
-    '/images/icons/icon-32x32.png',
-    '/images/icons/icon-64x64.png',
-    '/images/icons/icon-144x144.png',
-    '/images/icons/icon-256x256.png',
-    '/images/Logo.png',
-    '/images/LoginBackground.jpg',
-    '/images/ic_add_white_24px.svg',
-    '/images/ic_refresh_white_24px.svg',
+    'manifest.json',
+    'favicon.ico',
+    'styles/style.css',
+    'images/icons/icon-16x16.png',
+    'images/icons/icon-32x32.png',
+    'images/icons/icon-48x48.png',
+    'images/icons/icon-64x64.png',
+    'images/icons/icon-144x144.png',
+    'images/icons/icon-256x256.png',
+    'images/Logo.png',
+    'images/LoginBackground.jpg',
     'pages/offline.html',
     'pages/404.html'
 ];
@@ -47,6 +47,7 @@ self.addEventListener('activate', function(e) {
 // Fetching from the cache
 self.addEventListener('fetch', event => {
     console.log('Fetch event for ', event.request.url);
+    // debugger;
     event.respondWith(
         caches.match(event.request)
         .then(response => {

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" type="text/css" href="../styles/style.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aras Problem Reporter</title>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="../scripts/webcam.min.js"></script>
+    <script src="../scripts/newReportController.js" async></script>
+</head>
+
+<body onload="initializeNewReport();">
+    <div class="modal">
+        <form id="reportDialog" class="modal-content animate">
+            <div id="titleDiv" class="container">
+                <label for="title"><b>Title</b></label>
+                <input id="title" class="inputText" placeholder="Problem Summary"></input>
+            </div>
+            <div class="container">
+                <label for="problemDate"><b>Date</b></label>
+                <input type="date" id="problemDate" name="problemDate" value="">
+            </div>
+            <div class="container">
+                <label for="description"><b>Description</b></label>
+                <textarea id="description" placeholder="Describe the problem"></textarea>
+                <button id="locationButton" display="inline-block" onclick="getLocation(); return false;">Get
+                    Location</button>
+                <input type="file" id="imageUpload" onchange="uploadPhoto();" accept="image/png, image/jpeg"></input>
+                <button id="photoButton" display="inline-block"
+                    onclick="document.getElementById('imageUpload').click(); return false;">Upload
+                    Photo</button>
+            </div>
+
+            <div class="container">
+                <!-- <label for="imageUpload"><b>Image Of The Problem</br></b></label>
+                <div id="myCamera"></div>
+                <input type=button id="cameraButton" value="Open Camera" onclick="camera()">
+
+                <input type="file" id="imageUpload" onchange="previewFile()" accept="image/png, image/jpeg">
+                <div id="imageResult"></div> -->
+
+                <button id="loginButton" type="submit" onclick="return false;">Submit Problem Report</button>
+        </form>
+    </div>
+</body>
+
+</html>

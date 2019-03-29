@@ -3,58 +3,31 @@
 
 <head>
   <meta charset="utf-8">
+  <link rel="manifest" href="manifest.json">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aras Problem Reporter Login</title>
-  <link rel="stylesheet" type="text/css" href="/styles/style.css">
-  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" type="text/css" href="./styles/style.css">
+  <script src="scripts/oauthManager.js" async></script>
+  <script src="scripts/app.js" async></script>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Problem Reporter">
   <link rel="apple-touch-icon" href="images/icons/icon-152x152.png">
   <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
   <meta name="msapplication-TileColor" content="#2F3BA2">
-  <script src="scripts/app.js" async></script>
 </head>
 
-<body>
-  <div id="loader" class="loader">
+<body onload="initialize();">
+  <div id="loader" class="loader" hidden>
     <svg viewBox="0 0 32 32" width="32" height="32">
       <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
     </svg>
   </div>
 
-  <iframe name="reportFrame" id=reportFrame></iframe>
+  <iframe title="mainContent" name="mainContent" id="mainContent"></iframe>
 
-  <div id="loginDialog" class="modal">
-    <form class="modal-content" onsubmit="return login();">
-      <div class="imgcontainer">
-        <img src="/images/Logo.png" alt="logo" class="logo">
-      </div>
-
-      <div class="container">
-        <div class="container">
-          <label for="url"><b>Innovator URL</b></label>
-          <input type="text" class="login_text" placeholder="Innovator URL" id="url" name="url" value="">
-
-          <label for="database"><b>Database</b></label>
-          <select class="login_select" id="database" name="database">
-            <option value="" disabled selected>Database Name</option>
-            <option value="Fish">Fish</option>
-          </select>
-        </div>
-
-        <div class="container">
-          <label for="uname"><b>Username</b></label>
-          <input type="text" class="login_text" placeholder="Username" id="username" name="username" value="">
-
-          <label for="psw"><b>Password</b></label>
-          <input type="password" class="login_text" placeholder="Password" name="password">
-        </div>
-        <button id="loginButton" type="submit">Login</button>
-      </div>
-    </form>
-  </div>
 </body>
 
 </html>

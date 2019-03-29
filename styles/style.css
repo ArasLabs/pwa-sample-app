@@ -14,13 +14,13 @@ body {
   color: #444;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: url("/images/LoginBackground.jpg");
+  background-image: url("../images/LoginBackground.jpg");
   background-size: cover;
 
 }
 
 html {
-  overflow: hidden;
+  overflow: auto;
 }
 
 body {
@@ -92,7 +92,6 @@ body {
   height: 24px;
   margin-right: 16px;
   text-indent: -30000px;
-  overflow: hidden;
   opacity: 0.54;
   -webkit-transition: opacity 0.333s cubic-bezier(0, 0, 0.21, 1);
   transition: opacity 0.333s cubic-bezier(0, 0, 0.21, 1);
@@ -215,7 +214,7 @@ body {
 .dialog {
   background: #FFF;
   border-radius: 2px;
-  min-width: 430px;
+  min-width: 300px;
   width: 66.67rem;
   position: absolute;
   left: 50%;
@@ -228,7 +227,7 @@ body {
   transition: transform 0.333s cubic-bezier(0, 0, 0.21, 1) 0.05s, -webkit-transform 0.333s cubic-bezier(0, 0, 0.21, 1) 0.05s;
 }
 
-.dialog>div {
+.dialog-div {
   padding-left: 24px;
   padding-right: 24px;
 }
@@ -253,13 +252,31 @@ body {
   float: right;
 }
 
+/* The Modal (background) */
+.modal {
+  /* position: fixed; */
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+  background-image: url("../images/LoginBackground.jpg");
+  background-size: cover;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, .32), 0 8px 12px rgba(0, 0, 0, .24);
+}
+
 /* Modal Content/Box */
 .modal-content {
-  min-width: 430px;
+  max-width: 800px;
+  position: absolute;
+  /* top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important; */
   background-color: #fefefe;
-  margin: 5% auto 15% auto;
   border: 1px solid #888;
-  width: 80%;
+  width: 90%;
   box-shadow: 0 16px 36px rgba(0, 0, 0, .32), 0 8px 12px rgba(0, 0, 0, .24);
 }
 
@@ -296,16 +313,17 @@ button {
   font-size: 1.167rem;
   padding: 14px 20px;
   margin: 8px 0;
-  border: none;
+  border: 0px;
+  border-radius: 10px;
   cursor: pointer;
   width: 100%;
 }
 
 button:hover {
-  opacity: 0.8;
+  background-color: RoyalBlue;
 }
 
-/* Center the image and position the close button */
+/* Center the image */
 .imgcontainer {
   text-align: center;
   margin: 24px 0 12px 0;
@@ -314,8 +332,9 @@ button:hover {
 
 .container {
   color: white;
+  border: none;
   background-color: #1a173a;
-  padding: 8px;
+  padding: 12px;
   display: block;
   width: 100%;
   box-sizing: border-box;
@@ -323,36 +342,39 @@ button:hover {
   -webkit-appearance: none;
 }
 
-
-/* The Modal (background) */
-.modal {
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
+iframe {
+  border: none;
   height: 100%;
-  overflow: auto;
-  background-color: rgb(0, 0, 0);
-  background-color: rgba(0, 0, 0, 0.4);
-  background-image: url("/images/LoginBackground.jpg");
-  background-size: cover;
-  padding-top: 60px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, .32), 0 8px 12px rgba(0, 0, 0, .24);
 }
 
-.login_text {
+.inputText {
   display: block;
   width: 100%;
   height: 2.667rem;
   padding: 12px 20px;
-
   border: 1px solid #aaa;
-  border-radius: 3px;
+  border-radius: 10px;
   font-size: 1.167rem;
   color: #333;
   background-color: #fbfbfb;
   -webkit-appearance: none;
+}
+
+textarea {
+  height: 100%;
+  width: 100%;
+  padding-top: 4px;
+  padding-left: 8px;
+  border: 1px solid #aaa;
+  border-radius: 10px;
+  font-family: 'Roboto',
+    'Noto Sans JP',
+    Arial,
+    sans-serif;
+  font-size: 1.167rem;
+  box-sizing: border-box;
+  overflow: auto;
+  resize: none;
 }
 
 .login_select {
@@ -362,7 +384,7 @@ button:hover {
   padding-left: 12px;
   box-sizing: border-box;
   border: 1px solid #aaa;
-  border-radius: 3px;
+  border-radius: 10px;
   font-size: 1.167rem;
   background-color: #fbfbfb;
 }
@@ -388,26 +410,67 @@ select:invalid {
   }
 }
 
-iframe {
-  border: none;
-  height: 100%;
+#loginDialog {
+  margin: 50% 5%;
 }
 
-textarea {
-  height: 100%;
-  width: 100%;
-  box-sizing: border-box;
-  overflow: auto;
-  resize: none;
-  min-height: 100px;
+#reportDialog {
+  margin: 15% 5%;
 }
 
-date {
+#problemDate {
+  display: block;
   width: 100%;
+  font-family: 'Roboto',
+    'Noto Sans JP',
+    Arial,
+    sans-serif;
+  height: 2.667rem;
+  padding-top: 8px;
+  padding-left: 20px;
+  padding-bottom: 8px;
+  border: 1px solid #aaa;
+  border-radius: 10px;
+  font-size: 1.167rem;
+  color: #333;
+  background-color: #fbfbfb;
+  -webkit-appearance: none;
+}
+
+#description {
+  min-height: 150px;
 }
 
 #my_camera {
   width: 320px;
   height: 240px;
   border: 1px solid black;
+}
+
+#locationButton,
+#photoButton {
+  width: 40%;
+  padding: 10px 20px;
+}
+
+#locationButton {
+  /* background-image: url("../images/location.png"); */
+  background-repeat: no-repeat;
+  background-position: center left 24%;
+  background-size: 10%;
+  float: left;
+  margin-left: 7%;
+}
+
+#photoButton {
+  /* background-image: url("../images/camera.png"); */
+  background-repeat: no-repeat;
+  background-position: center left 24%;
+  background-size: 10%;
+  float: right;
+  margin-right: 7%;
+}
+
+#imageUpload {
+  display: none;
 }

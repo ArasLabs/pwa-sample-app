@@ -1,40 +1,72 @@
-function login() {
-  document.getElementById("loginDialog").style.display = 'none';
-  document.getElementById("reportFrame").src = '/pages/createReport.html';
-  setTimeout(function() {
-    document.getElementById("loader").style.display = "none";
-  }, 1000);
-  return false;
-}
+/**
+ * Function to initialize the application
+ */
+function initialize() {
+  // Checking if there is local storage
+  // if (window.localStorage) {
+  //   let database = window.localStorage.getItem("database");
+  //   let username = window.localStorage.getItem("username");
+  //   let password = window.localStorage.getItem("password");
 
-
-
-(function() {
-  'use strict';
-
-  // disabling database field if there is no innovator url
-  var url = document.getElementById("url");
-  var database = document.getElementById("database");
-  database.disabled = true;
-  url.addEventListener('keyup', function() {
-    if (url.value === null || url.value.length === 0) {
-      database.disabled = true;
-      database.selectedIndex = "0";
-      for (var i = 1; i < database.options.length; i++) {
-        database.remove(i);
-      }
-    } else {
-      database.disabled = false;
-    }
-  });
-
+  //   // Logging in the previous user
+  //   if (database !== null && username !== null && password !== null) {
+  //     login(database, username, password);
+  //     return false;
+  //   }
+  // }
+  // // Showing Login Dialog
+  // document.getElementById("mainContent").src = 'pages/login.html';
 
   // Checking if the browser supports service workers
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker
-      .register('./service-worker.js')
-      .then(function() {
-        console.log('Service Worker Registered');
-      });
+    debugger;
+    // window.addEventListener('load', function() {
+    navigator.serviceWorker.register('../service-worker.js');
+    // });
   }
-})();
+
+  return false;
+}
+
+/**
+ * Managing login with the given user credentials
+ * @param {*} database
+ * @param {*} username
+ * @param {*} password
+ */
+function login(database, username, password) {
+  var serverUrl = window.location.href.substr(0, window.location.href.length - 14);
+
+  // attempting login
+  let loginSuccesful = oauthLogin(serverUrl, database, username, password);
+
+  // if the user is authenticated successfully, show the new report dialog
+  if (loginSuccesful) {
+    displayReportPage();
+
+    // saving the user's credentials
+    if (window.localStorage) {
+      window.localStorage.setItem("database", database);
+      window.localStorage.setItem("username", username);
+      window.localStorage.setItem("password", password);
+    }
+  }
+
+  // returning false to prevent page refresh
+  return false;
+}
+
+/**
+ * Function to display the new report page
+ */
+function displayReportPage() {
+  // debugger;
+  // Displaying the report
+  document.getElementById("mainContent").src = 'pages/newReport.html';
+  // debugger;
+
+  // Hide the loader after the report frame is displayed
+  setTimeout(function() {
+    document.getElementById("loader").style.display = "none";
+  }, 500);
+}
