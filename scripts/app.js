@@ -15,11 +15,11 @@ function initialize() {
   //   }
   // }
   // // Showing Login Dialog
-  // document.getElementById("mainContent").src = 'pages/login.html';
+  document.getElementById("mainContent").src = 'pages/login.html';
 
   // Checking if the browser supports service workers
   if ('serviceWorker' in navigator) {
-    debugger;
+    // debugger;
     // window.addEventListener('load', function() {
     navigator.serviceWorker.register('../service-worker.js');
     // });
@@ -35,10 +35,11 @@ function initialize() {
  * @param {*} password
  */
 function login(database, username, password) {
-  var serverUrl = window.location.href.substr(0, window.location.href.length - 14);
+  let urlComponents = window.location.href.split('/');
+  let serverUrl = urlComponents[0] + "//" + urlComponents[1] + "/" + urlComponents[2] + "/" + urlComponents[3];
 
   // attempting login
-  let loginSuccesful = oauthLogin(serverUrl, database, username, password);
+  let loginSuccesful = oauthLogin(serverUrl, database, username, password, "ProblemReporter");
 
   // if the user is authenticated successfully, show the new report dialog
   if (loginSuccesful) {

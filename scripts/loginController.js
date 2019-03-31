@@ -30,7 +30,7 @@ function loginFromUI() {
  */
 function populateDatabaseList(databaseList) {
     let databaseField = document.getElementById("database");
-    let databases = getElementsFromXmlHttpResponse(databaseList, "DB");
+    let databases = getXMLElementsFromXmlHttpResponse(databaseList, "DB");
 
     // if the url is a valid innovator instance, add the databases to the dropdown
     if (databases.length > 0) {

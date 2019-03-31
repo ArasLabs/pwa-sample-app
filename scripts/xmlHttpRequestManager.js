@@ -20,9 +20,9 @@ function createXmlHttpRequest(url, result) {
     xhttp.send();
 }
 
-function getElementsFromXmlHttpResponse(textToParse, tag) {
+function getXMLElementsFromXmlHttpResponse(response, tag) {
     parser = new DOMParser();
-    xmlDoc = parser.parseFromString(textToParse, "text/xml");
+    xmlDoc = parser.parseFromString(response, "text/xml");
 
     return xmlDoc.getElementsByTagName(tag);
 }

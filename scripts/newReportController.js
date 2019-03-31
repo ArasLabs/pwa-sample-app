@@ -1,16 +1,14 @@
-// Setting the date field to the current date
-let today = new Date().toISOString().substr(0, 10);
-document.getElementById("problemDate").value = today;
-
-// Getting the user's location
-var locationButton = document.getElementById("locationButton");
-// var geocoder = new google.maps.Geocoder();
-
-
+/**
+ * Initializing the New Report page
+ */
 function initializeNewReport() {
-    // getLocation();
+    // Setting the date field to the current date
+    let today = new Date().toISOString().substr(0, 10);
+    document.getElementById("problemDate").value = today;
 
-    document.getElementById("title").focus;
+    // Getting the user's location
+    var locationButton = document.getElementById("locationButton");
+    // var geocoder = new google.maps.Geocoder();
 }
 
 function getLocation() {
@@ -72,26 +70,66 @@ function showPosition(position) {
     return false;
 }
 
+
+function ConvertDMSToDD(degrees, minutes, seconds, direction) {
+
+    var dd = degrees + (minutes / 60) + (seconds / 3600);
+
+    if (direction == "S" || direction == "W") {
+        dd = dd * -1;
+    }
+
+    return dd;
+}
 var cameraOpen = false;
 
 function uploadPhoto() {
-    var preview = document.getElementById('imageResult');
-    debugger;
+    // debugger;
     var file = document.getElementById("imageUpload").files[0];
     var reader = new FileReader();
 
     reader.onload = (function(theFile) {
-        return function(e) {
-            document.getElementById('imageResult').innerHTML = ['<img src="', e.target.result, '" title="', theFile.name, '" width="50" />'].join('');
-            document.getElementById("myCamera").style.height = 0;
-            document.getElementById("cameraButton").value = "Open Camera";
-            Webcam.reset();
-            cameraOpen = false;
-        };
+        // return function(e) {
+        // document.getElementById('imageResult').innerHTML = ['<img src="', e.target.result, '" title="', theFile.name, '" width="50" />'].join('');
+        // document.getElementById("myCamera").style.height = 0;
+        // document.getElementById("cameraButton").value = "Open Camera";
+        // Webcam.reset();
+        // cameraOpen = false;
+        // };
     })(file);
 
     if (file) {
         reader.readAsDataURL(file);
+
+        EXIF.getData(this, function() {
+
+            myData = file;
+
+            console.log(myData.exifdata);
+
+            var latDegree = myData.exifdata.GPSLatitude[0].numerator;
+            var latMinute = myData.exifdata.GPSLatitude[1].numerator;
+            var latSecond = myData.exifdata.GPSLatitude[2].numerator;
+            var latDirection = myData.exifdata.GPSLatitudeRef;
+
+            var latFinal = ConvertDMSToDD(latDegree, latMinute, latSecond, latDirection);
+            console.log(latFinal);
+
+            // Calculate longitude decimal
+            var lonDegree = myData.exifdata.GPSLongitude[0].numerator;
+            var lonMinute = myData.exifdata.GPSLongitude[1].numerator;
+            var lonSecond = myData.exifdata.GPSLongitude[2].numerator;
+            var lonDirection = myData.exifdata.GPSLongitudeRef;
+
+            var lonFinal = ConvertDMSToDD(lonDegree, lonMinute, lonSecond, lonDirection);
+            console.log(lonFinal);
+
+            // Create Google Maps link for the location
+            document.getElementById('title').value = "http://www.google.com/maps/place/' + latFinal + ',' + lonFinal + '"
+            target = "_blank";
+
+        });
+
     }
 
     return false;
