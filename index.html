@@ -2,32 +2,93 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <link rel="manifest" href="manifest.json">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aras Problem Reporter Login</title>
-  <link rel="stylesheet" type="text/css" href="./styles/style.css">
-  <script src="scripts/oauthManager.js" async></script>
-  <script src="scripts/app.js" async></script>
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Problem Reporter">
-  <link rel="apple-touch-icon" href="images/icons/icon-152x152.png">
-  <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
-  <meta name="msapplication-TileColor" content="#2F3BA2">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problem Reporter</title>
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Problem Reporter">
+    <link rel="apple-touch-icon" href="images/icons/icon-152x152.png">
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#2F3BA2">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="scripts/xmlHttpRequestManager.js" async></script>
+    <script src="scripts/oauthManager.js" async></script>
+    <script src="scripts/app.js" async></script>
 </head>
 
-<body onload="initialize();">
-  <div id="loader" class="loader" hidden>
-    <svg viewBox="0 0 32 32" width="32" height="32">
-      <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
-    </svg>
-  </div>
+<body onload="initialize()">
+    <header class="header">
+        <h1 class="header__title">Problem Reporter</h1>
+        <div class="dropdown" style="float:right;">
+            <button class="menuButton" id="menu" onclick="showMenu()"><i class="fa fa-bars"></i></button>
+            <div id="dropdown-content" class="dropdown-content">
+                <a onclick="signOut()">Sign Out</a>
+            </div>
+        </div>
+    </header>
 
-  <iframe title="mainContent" name="mainContent" id="mainContent"></iframe>
+    <div id="loader" class="loader">
+        <svg viewBox="0 0 32 32" width="32" height="32">
+            <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
+        </svg>
+    </div>
 
+    <main class="main">
+        <div id="loginDialog" class="modal">
+            <form class="modal-content animate" onsubmit="return loginFromUI();">
+                <div class="imgcontainer">
+                    <img src="images/avatar.png" alt="Avatar" class="avatar">
+                </div>
+
+                <div class="container">
+                    <label for="database"><b>Database</b></label>
+                    <select name="database" id="database" required>
+                        <option value="" disabled selected>Database Name</option>
+                    </select>
+
+                    <label for="username"><b>Username</b></label>
+                    <input type="text" id="username" placeholder="Enter Username" name="username" required>
+
+                    <label for="password"><b>Password</b></label>
+                    <input type="password" id="password" placeholder="Enter Password" name="password" required>
+
+                    <label>
+                        <input type="checkbox" id="rememberMe" name="rememberMe" checked="checked"> Remember me
+                    </label>
+
+                    <button type="submit">Login</button>
+                </div>
+            </form>
+        </div>
+        <div id="reportPage">
+            <form>
+                <div id="titleDiv" class="container">
+                    <label for="title"><b>Title</b></label>
+                    <input id="title" name="title" class="inputText" type="text" placeholder="Problem Summary"></input>
+
+                    <label for="problemDate"><b>Date</b></label>
+                    <input type="date" id="problemDate" name="problemDate" value="">
+
+                    <label for="description"><b>Description</b></label>
+                    <textarea id="description" placeholder="Describe the problem"></textarea>
+
+                    <button id="locationButton" display="inline-block" onclick="getLocation(); return false;">Get
+                        Location</button>
+
+                    <input type="file" id="imageUpload" onchange="uploadPhoto();"
+                        accept="image/png, image/jpeg"></input>
+                    <button id="photoButton" display="inline-block"
+                        onclick="document.getElementById('imageUpload').click(); return false;">Upload
+                        Photo</button>
+                </div>
+            </form>
+        </div>
+    </main>
 </body>
 
 </html>

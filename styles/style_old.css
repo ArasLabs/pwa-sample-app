@@ -8,16 +8,19 @@ body {
   margin: 0;
   height: 100%;
   width: 100%;
-  font-family: 'Helvetica', 'Verdana', sans-serif;
+  font-family: 'Roboto', 'Noto Sans JP', Arial, sans-serif;
   font-weight: 400;
   font-display: optional;
   color: #444;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url("../images/LoginBackground.jpg");
+  background-size: cover;
+
 }
 
 html {
-  overflow: hidden;
+  overflow: auto;
 }
 
 body {
@@ -44,23 +47,20 @@ body {
   -webkit-align-content: stretch;
   -ms-flex-line-pack: stretch;
   align-content: stretch;
-  background: #ececec;
 }
 
 .header {
   width: 100%;
   height: 56px;
-  color: #FFF;
-  background: #3F51B5;
+  background: #ebe9e9;
   position: fixed;
   font-size: 20px;
-  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 2px 9px 1px rgba(0, 0, 0, 0.12), 0 4px 2px -2px rgba(0, 0, 0, 0.2);
   padding: 16px 16px 0 16px;
   will-change: transform;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
-  display: flex;
+  box-shadow: 0px 4px 5px 0 grey;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
   -webkit-flex-direction: row;
@@ -87,12 +87,11 @@ body {
   z-index: 1000;
 }
 
-.header .headerButton {
+.header {
   width: 24px;
   height: 24px;
   margin-right: 16px;
   text-indent: -30000px;
-  overflow: hidden;
   opacity: 0.54;
   -webkit-transition: opacity 0.333s cubic-bezier(0, 0, 0.21, 1);
   transition: opacity 0.333s cubic-bezier(0, 0, 0.21, 1);
@@ -193,128 +192,98 @@ body {
   }
 }
 
-.main {
-  padding-top: 60px;
-  -webkit-box-flex: 1;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Full-width input fields */
-input[type=text],
-input[type=password],
-textarea,
-select,
-#problemDate {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-.textarea {
-  font-family: 'Helvetica',
-    'Verdana',
-    sans-serif;
-  height: 10em;
-}
-
-option[value=""]:disabled {
-  color: gray;
-  display: none;
-}
-
-select:invalid {
-  color: gray;
-}
-
-button {
-  background-color: #3F51B5;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-}
-
-button:hover {
-  opacity: 0.8;
-}
-
-.switch {
+.dialog-container {
+  background: rgba(0, 0, 0, 0.57);
   position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
-
-.switch input {
+  left: 0;
+  top: 0;
+  width: 66.67rem;
+  height: 100%;
   opacity: 0;
-  width: 0;
-  height: 0;
+  pointer-events: none;
+  will-change: opacity;
+  -webkit-transition: opacity 0.333s cubic-bezier(0, 0, 0.21, 1);
+  transition: opacity 0.333s cubic-bezier(0, 0, 0.21, 1);
 }
 
-/* Center the image */
-.imgcontainer {
-  text-align: center;
-  margin: 24px 0 12px 0;
-  position: relative;
+.dialog-container--visible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-img.avatar {
-  width: 40%;
-  border-radius: 50%;
+.dialog {
+  background: #FFF;
+  border-radius: 2px;
+  min-width: 300px;
+  width: 66.67rem;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%) translateY(30px);
+  transform: translate(-50%, -50%) translateY(30px);
+  -webkit-transition: -webkit-transform 0.333s cubic-bezier(0, 0, 0.21, 1) 0.05s;
+  transition: -webkit-transform 0.333s cubic-bezier(0, 0, 0.21, 1) 0.05s;
+  transition: transform 0.333s cubic-bezier(0, 0, 0.21, 1) 0.05s;
+  transition: transform 0.333s cubic-bezier(0, 0, 0.21, 1) 0.05s, -webkit-transform 0.333s cubic-bezier(0, 0, 0.21, 1) 0.05s;
 }
 
-.container {
-  padding: 16px;
+.dialog-div {
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
-span.psw {
+.dialog-title {
+  padding-top: 20px;
+  font-size: 1.25em;
+}
+
+.dialog-body {
+  padding-top: 20px;
+  padding-bottom: 24px;
+}
+
+.dialog-body select {
+  width: 100%;
+  font-size: 2em;
+}
+
+.dialog-buttons {
+  padding: 8px !important;
   float: right;
-  padding-top: 16px;
 }
 
 /* The Modal (background) */
 .modal {
-  position: fixed;
-  /* Stay in place */
+  /* position: fixed; */
   z-index: 1;
-  /* Sit on top */
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  /* Enable scroll if needed */
   background-color: rgb(0, 0, 0);
-  /* Fallback color */
   background-color: rgba(0, 0, 0, 0.4);
-  /* Black w/ opacity */
-  padding-top: 60px;
+  background-image: url("../images/LoginBackground.jpg");
+  background-size: cover;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, .32), 0 8px 12px rgba(0, 0, 0, .24);
 }
 
 /* Modal Content/Box */
 .modal-content {
+  max-width: 800px;
+  position: absolute;
+  /* top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important; */
   background-color: #fefefe;
-  margin: 15% auto 15% auto;
-  /* 15% from the top, 15% from the bottom and centered */
   border: 1px solid #888;
-  width: 80%;
-  /* Could be more or less, depending on screen size */
+  width: 90%;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, .32), 0 8px 12px rgba(0, 0, 0, .24);
 }
 
 /* Add Zoom Animation */
 .animate {
-  -webkit-animation: animatezoom 0.6s;
-  animation: animatezoom 0.6s
+  -webkit-animation: animatezoom 0.4s;
+  animation: animatezoom 0.4s
 }
 
 @-webkit-keyframes animatezoom {
@@ -337,65 +306,169 @@ span.psw {
   }
 }
 
-/* Change styles for span on extra small screens */
+/* Set a style for all buttons */
+button {
+  background-color: #182bfb;
+  color: white;
+  font-size: 1.167rem;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: 0px;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:hover {
+  background-color: RoyalBlue;
+}
+
+/* Center the image */
+.imgcontainer {
+  text-align: center;
+  margin: 24px 0 12px 0;
+  position: relative;
+}
+
+.container {
+  color: white;
+  border: none;
+  background-color: #1a173a;
+  padding: 12px;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 1.167rem;
+  -webkit-appearance: none;
+}
+
+iframe {
+  border: none;
+  height: 100%;
+}
+
+.inputText {
+  display: block;
+  width: 100%;
+  height: 2.667rem;
+  padding: 12px 20px;
+  border: 1px solid #aaa;
+  border-radius: 10px;
+  font-size: 1.167rem;
+  color: #333;
+  background-color: #fbfbfb;
+  -webkit-appearance: none;
+}
+
+textarea {
+  height: 100%;
+  width: 100%;
+  padding-top: 4px;
+  padding-left: 8px;
+  border: 1px solid #aaa;
+  border-radius: 10px;
+  font-family: 'Roboto',
+    'Noto Sans JP',
+    Arial,
+    sans-serif;
+  font-size: 1.167rem;
+  box-sizing: border-box;
+  overflow: auto;
+  resize: none;
+}
+
+.login_select {
+  display: block;
+  width: 100%;
+  height: 2.667rem;
+  padding-left: 12px;
+  box-sizing: border-box;
+  border: 1px solid #aaa;
+  border-radius: 10px;
+  font-size: 1.167rem;
+  background-color: #fbfbfb;
+}
+
+option {
+  color: black;
+}
+
+option[value=""]:disabled {
+  color: gray;
+  display: none;
+}
+
+select:invalid {
+  color: gray;
+}
+
+/* Change styles for span and cancel button on extra small screens */
 @media screen and (max-width: 300px) {
   span.psw {
     display: block;
     float: none;
   }
-
-  .cancelbtn {
-    width: 100%;
-  }
 }
 
-.menuButton {
-  background-color: #3F51B5;
-  color: white;
-  padding: 0;
-  margin: 0;
-  font-size: 20px;
-  border: none;
-  cursor: pointer;
-  display: none;
+#loginDialog {
+  margin: 30% 5%;
 }
 
-.dropdown {
-  position: relative;
+#reportDialog {
+  margin: 15% 5%;
 }
 
-.dropdown-content {
-  font-size: 16px;
-  display: none;
-  position: absolute;
-  right: 0;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-}
-
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
+#problemDate {
   display: block;
+  width: 100%;
+  font-family: 'Roboto',
+    'Noto Sans JP',
+    Arial,
+    sans-serif;
+  height: 2.667rem;
+  padding-top: 8px;
+  padding-left: 20px;
+  padding-bottom: 8px;
+  border: 1px solid #aaa;
+  border-radius: 10px;
+  font-size: 1.167rem;
+  color: #333;
+  background-color: #fbfbfb;
+  -webkit-appearance: none;
 }
 
-.dropdown-content a:hover {
-  background-color: #f1f1f1;
+#description {
+  min-height: 150px;
 }
 
-.dropdown:hover .dropdown-content {
-  display: block;
+#my_camera {
+  width: 320px;
+  height: 240px;
+  border: 1px solid black;
 }
 
-.dropdown:hover .dropbtn {
-  background-color: #3F51B5;
+#locationButton,
+#photoButton {
+  width: 40%;
+  padding: 10px 20px;
 }
 
-#reportPage {
-  display: none;
+#locationButton {
+  /* background-image: url("../images/location.png"); */
+  background-repeat: no-repeat;
+  background-position: center left 24%;
+  background-size: 10%;
+  float: left;
+  margin-left: 7%;
+}
+
+#photoButton {
+  /* background-image: url("../images/camera.png"); */
+  background-repeat: no-repeat;
+  background-position: center left 24%;
+  background-size: 10%;
+  float: right;
+  margin-right: 7%;
 }
 
 #imageUpload {
