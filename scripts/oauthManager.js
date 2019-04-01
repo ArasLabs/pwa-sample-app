@@ -30,14 +30,26 @@ function oauthLogin(url, database, username, password, clientID) {
                     var tokenRequest = new XMLHttpRequest();
                     tokenRequest.open("POST", tokenEndpointURL);
                     tokenRequest.setRequestHeader('Content-Type', 'application/json');
-                    tokenRequest.send(JSON.stringify({
-                        "grant_type": "password",
-                        "scope": "Innovator",
-                        "client_id": clientID,
-                        "username": username,
-                        "password": password,
-                        "database": database
-                    }));
+                    // tokenRequest.send(JSON.stringify({
+                    //     "grant_type": "password",
+                    //     "scope": "Innovator",
+                    //     "client_id": clientID,
+                    //     "username": username,
+                    //     "password": password,
+                    //     "database": database
+                    // }));
+
+                    // set body of request using form data
+                    var body = new FormData();
+                    body.append("grant_type", "password");
+                    body.append("scope", "Innovator");
+                    body.append("client_id", clientID);
+                    body.append("username", username);
+                    body.append("password", password);
+                    body.append("database", database);
+
+                    // send request
+                    tokenRequest.send(body);
 
                     tokenRequest.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
