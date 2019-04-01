@@ -124,6 +124,9 @@ function login(database, username, password, rememberMe) {
     return false;
 }
 
+/**
+ * Toggles the Settings menu
+ */
 function toggleMenu() {
     let dropdowns = document.getElementsByClassName("dropdown-content");
     for (let i = 0; i < dropdowns.length; i++) {
@@ -136,6 +139,9 @@ function toggleMenu() {
     }
 }
 
+/**
+ * Shows the Settings Menu
+ */
 function showMenu() {
     let dropdowns = document.getElementsByClassName("dropdown-content");
     for (let i = 0; i < dropdowns.length; i++) {
@@ -143,6 +149,9 @@ function showMenu() {
     }
 }
 
+/**
+ * Hides the Settings Menu
+ */
 function hideMenu() {
     let dropdowns = document.getElementsByClassName("dropdown-content");
     for (let i = 0; i < dropdowns.length; i++) {
@@ -162,6 +171,9 @@ function uploadPhoto() {
 
 }
 
+/**
+ * Get's the user's location and logs it to the console
+ */
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
