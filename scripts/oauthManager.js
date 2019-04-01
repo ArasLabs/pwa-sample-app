@@ -44,7 +44,7 @@ function oauthLogin(url, database, username, password, clientID) {
 
                     tokenRequest.onreadystatechange = function() {
                         if (tokenRequest.readyState == 4 && tokenRequest.status == 200) {
-                            debugger;
+                            var token = JSON.parse(tokenRequest.responseText).access_token;
                         }
                     }
                 }
