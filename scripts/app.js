@@ -6,19 +6,31 @@ function initialize() {
         });
     }
 
-    // Getting the application URL
-    let urlComponents = window.location.href.split('/');
-    let serverUrl = urlComponents[0] + "//" + urlComponents[1] + "/" + urlComponents[2] + "/" + urlComponents[3];
-
-    // Populating the Database List
-    createXmlHttpRequest(serverUrl + "/Server/DBList.aspx", populateDatabaseList);
+    hideMenu();
+    let today = new Date().toISOString().substr(0, 10);
+    document.getElementById("problemDate").value = today;
 
     window.onclick = function(event) {
-        if (!event.target.matches('.menuButton')) {
+        if (!event.target.matches('.menuButton') && event.target.className !== 'fa fa-cog') {
             hideMenu();
         }
     }
 
+    // Checking if there is local storage
+    if (window.localStorage) {
+        let database = window.localStorage.getItem("database");
+        let username = window.localStorage.getItem("username");
+        let password = window.localStorage.getItem("password");
+
+        // Logging in the previous user
+        if (database !== null && username !== null && password !== null) {
+            login(database, username, password, true);
+            return;
+        }
+    }
+
+    // No previous user found, showing login
+    showLoginDialog();
 }
 
 /**
@@ -40,6 +52,23 @@ function populateDatabaseList(databaseList) {
         }
         databaseField.selectedIndex = 1;
     }
+}
+
+/**
+ * Utility function to show the login Dialog
+ */
+function showLoginDialog() {
+    document.getElementById("loginDialog").style.display = "inline";
+    document.getElementById("reportPage").style.display = "none";
+    document.getElementById("menu").style.display = "none";
+    hideMenu();
+
+    // Getting the application URL
+    let urlComponents = window.location.href.split('/');
+    let serverUrl = urlComponents[0] + "//" + urlComponents[1] + "/" + urlComponents[2] + "/" + urlComponents[3];
+
+    // Populating the Database List
+    createXmlHttpRequest(serverUrl + "/Server/DBList.aspx", populateDatabaseList);
 }
 
 /**
@@ -95,23 +124,29 @@ function login(database, username, password, rememberMe) {
     return false;
 }
 
-function showMenu() {
+function toggleMenu() {
     let dropdowns = document.getElementsByClassName("dropdown-content");
     for (let i = 0; i < dropdowns.length; i++) {
         var openDropdown = dropdowns[i];
-        openDropdown.classList.add('show');
+        if (openDropdown.style.display === "none") {
+            openDropdown.style.display = "block"
+        } else {
+            openDropdown.style.display = "none"
+        }
+    }
+}
 
+function showMenu() {
+    let dropdowns = document.getElementsByClassName("dropdown-content");
+    for (let i = 0; i < dropdowns.length; i++) {
+        dropdowns[i].style.display = "block";
     }
 }
 
 function hideMenu() {
-    // TODO: Does not hide after mutliple sign outs
     let dropdowns = document.getElementsByClassName("dropdown-content");
     for (let i = 0; i < dropdowns.length; i++) {
-        var openDropdown = dropdowns[i];
-        if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-        }
+        dropdowns[i].style.display = "none";
     }
 }
 
@@ -120,8 +155,22 @@ function signOut() {
     window.localStorage.clear();
 
     // Showing the login dialog
-    document.getElementById("loginDialog").style.display = "flex";
-    document.getElementById("reportPage").style.display = "none";
-    document.getElementById("menu").style.display = "none";
-    hideMenu();
+    showLoginDialog();
+}
+
+function uploadPhoto() {
+
+}
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            console.log("Latitude: " + position.coords.latitude +
+                "<br>Longitude: " + position.coords.longitude);
+        });
+    } else {
+        console.error = "Geolocation is not supported by this browser.";
+    }
+
+    return false;
 }

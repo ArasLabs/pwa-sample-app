@@ -25,7 +25,7 @@
     <header class="header">
         <h1 class="header__title">Problem Reporter</h1>
         <div class="dropdown" style="float:right;">
-            <button class="menuButton" id="menu" onclick="showMenu()"><i class="fa fa-bars"></i></button>
+            <button class="menuButton" id="menu" onclick="toggleMenu()"><i class="fa fa-cog"></i></button>
             <div id="dropdown-content" class="dropdown-content">
                 <a onclick="signOut()">Sign Out</a>
             </div>
@@ -77,14 +77,14 @@
                     <label for="description"><b>Description</b></label>
                     <textarea id="description" placeholder="Describe the problem"></textarea>
 
-                    <button id="locationButton" display="inline-block" onclick="getLocation(); return false;">Get
-                        Location</button>
 
                     <input type="file" id="imageUpload" onchange="uploadPhoto();"
                         accept="image/png, image/jpeg"></input>
                     <button id="photoButton" display="inline-block"
                         onclick="document.getElementById('imageUpload').click(); return false;">Upload
                         Photo</button>
+
+                    <button type="submit" onclick="getLocation(); return false;">Submit Problem Report</button>
                 </div>
             </form>
         </div>

@@ -216,13 +216,10 @@ select,
   display: inline-block;
   border: 1px solid #ccc;
   box-sizing: border-box;
-}
-
-.textarea {
   font-family: 'Helvetica',
     'Verdana',
     sans-serif;
-  height: 10em;
+
 }
 
 option[value=""]:disabled {
@@ -299,6 +296,7 @@ span.psw {
   background-color: rgba(0, 0, 0, 0.4);
   /* Black w/ opacity */
   padding-top: 60px;
+  display: none;
 }
 
 /* Modal Content/Box */
@@ -400,4 +398,12 @@ span.psw {
 
 #imageUpload {
   display: none;
+}
+
+#description {
+  font-family: 'Helvetica',
+    'Verdana',
+    sans-serif;
+  min-height: 10em;
+  height: 10em;
 }
