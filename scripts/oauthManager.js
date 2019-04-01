@@ -29,14 +29,6 @@ function oauthLogin(url, database, username, password, clientID) {
 
                     var tokenRequest = new XMLHttpRequest();
                     tokenRequest.open("POST", tokenEndpointURL);
-                    // tokenRequest.send(JSON.stringify({
-                    //     "grant_type": "password",
-                    //     "scope": "Innovator",
-                    //     "client_id": clientID,
-                    //     "username": username,
-                    //     "password": password,
-                    //     "database": database
-                    // }));
 
                     // set body of request using form data
                     var body = new FormData();
