@@ -13,7 +13,7 @@ function oauthLogin(url, database, username, password, clientID) {
     oauthRequest.open("GET", discoveryUrl);
     oauthRequest.send();
     oauthRequest.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
+        if (oauthRequest.readyState == 4 && oauthRequest.status == 200) {
             console.log(oauthRequest.responseURL)
             let oauthServerURL = JSON.parse(oauthRequest.responseText.toString()).locations[0].uri;
 
@@ -22,7 +22,7 @@ function oauthLogin(url, database, username, password, clientID) {
             endpointRequest.open("GET", oauthServerURL + ".well-known/openid-configuration");
             endpointRequest.send();
             endpointRequest.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
+                if (endpointRequest.readyState == 4 && endpointRequest.status == 200) {
                     console.log(endpointRequest.responseURL);
 
                     var tokenEndpointURL = JSON.parse(endpointRequest.responseText.toString()).token_endpoint;
@@ -52,7 +52,7 @@ function oauthLogin(url, database, username, password, clientID) {
                     tokenRequest.send(body);
 
                     tokenRequest.onreadystatechange = function() {
-                        if (this.readyState == 4 && this.status == 200) {
+                        if (tokenRequest.readyState == 4 && tokenRequest.status == 200) {
                             debugger;
                         }
                     }
