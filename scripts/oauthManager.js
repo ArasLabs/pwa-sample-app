@@ -14,8 +14,8 @@ function oauthLogin(url, database, username, password, clientID) {
     oauthRequest.send();
     oauthRequest.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            console.log(Http.responseURL)
-            let oauthServerURL = JSON.parse(Http.responseText.toString()).locations[0].uri;
+            console.log(oauthRequest.responseURL)
+            let oauthServerURL = JSON.parse(oauthRequest.responseText.toString()).locations[0].uri;
 
             // Getting the token end point
             var endpointRequest = new XMLHttpRequest();
@@ -23,9 +23,9 @@ function oauthLogin(url, database, username, password, clientID) {
             endpointRequest.send();
             endpointRequest.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                    console.log(Http.responseURL);
+                    console.log(endpointRequest.responseURL);
 
-                    var tokenEndpointURL = JSON.parse(Http.responseText.toString()).token_endpoint;
+                    var tokenEndpointURL = JSON.parse(endpointRequest.responseText.toString()).token_endpoint;
 
                     var tokenRequest = new XMLHttpRequest();
                     tokenRequest.open("POST", tokenEndpointURL);
