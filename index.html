@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Problem Reporter</title>
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,22 +14,31 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
     <meta name="msapplication-TileColor" content="#2F3BA2">
+    <meta name="Description" content="Application to submit problem reports to innovator">
+    <meta name="theme-color" content="#3F51B5" />
+    <title>Problem Reporter</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="scripts/xmlHttpRequestManager.js" async></script>
+    <script src="scripts/md5.min.js"></script>
+    <script src="scripts/httpRequestManager.js" async></script>
     <script src="scripts/oauthManager.js" async></script>
     <script src="scripts/app.js" async></script>
 </head>
 
 <body onload="initialize()">
+
     <header class="header">
-        <h1 class="header__title">Problem Reporter</h1>
-        <div class="dropdown" style="float:right;">
-            <button class="menuButton" id="menu" onclick="toggleMenu()"><i class="fa fa-cog"></i></button>
-            <div id="dropdown-content" class="dropdown-content">
-                <a onclick="signOut()">Sign Out</a>
-            </div>
-        </div>
+        <button class="navButton" id="navButton" onclick="openNav()" aria-label="Menu">
+            <i class="fa fa-bars" id="fa fa-bars"></i>
+        </button>
+        <h1 class=" header_title">Problem Reporter</h1>
     </header>
+
+    <div id="sideNav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a onclick="showModule('newReportModule')" href="#">Create New Report</a>
+        <a onclick="showModule('allReportsModule')" href="#">Show Open Reports</a>
+        <a onclick="signOut()" href="#">Sign Out</a>
+    </div>
 
     <div id="loader" class="loader">
         <svg viewBox="0 0 32 32" width="32" height="32">
@@ -38,7 +46,7 @@
         </svg>
     </div>
 
-    <main class="main">
+    <main class="main" id="main">
         <div id="loginDialog" class="modal">
             <form class="modal-content animate" onsubmit="return loginFromUI();">
                 <div class="imgcontainer">
@@ -52,10 +60,12 @@
                     </select>
 
                     <label for="username"><b>Username</b></label>
-                    <input type="text" id="username" placeholder="Enter Username" name="username" required>
+                    <input type="text" id="username" placeholder="Enter Username" name="username"
+                        autocomplete="username" required>
 
                     <label for="password"><b>Password</b></label>
-                    <input type="password" id="password" placeholder="Enter Password" name="password" required>
+                    <input type="password" id="password" placeholder="Enter Password" name="password"
+                        autocomplete="current-password" required>
 
                     <label>
                         <input type="checkbox" id="rememberMe" name="rememberMe" checked="checked"> Remember me
@@ -65,7 +75,7 @@
                 </div>
             </form>
         </div>
-        <div id="reportPage">
+        <div id="newReportModule" class="modules">
             <form>
                 <div id="titleDiv" class="container">
                     <label for="title"><b>Title</b></label>
@@ -78,15 +88,15 @@
                     <textarea id="description" placeholder="Describe the problem"></textarea>
 
 
-                    <input type="file" id="imageUpload" onchange="uploadPhoto();"
-                        accept="image/png, image/jpeg"></input>
-                    <button id="photoButton" display="inline-block"
-                        onclick="document.getElementById('imageUpload').click(); return false;">Upload
-                        Photo</button>
+                    <input type="file" id="imageUpload" onchange="getImage();" accept="image/*"></input>
+                    <button id="photoButton" onclick="document.getElementById('imageUpload').click(); return false;">
+                    </button>
 
                     <button type="submit" onclick="getLocation(); return false;">Submit Problem Report</button>
                 </div>
             </form>
+        </div>
+        <div id="allReportsModule" class="modules">
         </div>
     </main>
 </body>
