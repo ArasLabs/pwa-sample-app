@@ -277,6 +277,21 @@ function submitReport(loc) {
  * Uploads the image of the problme to the server
  */
 function uploadImage() {
+    var transactionID = "";
+    var fileID = generateNewGuid();
+
+    // Starting the transaction by getting a tansaction ID
+    var transactionIDRequest = httpPost(oauthToken, serverURL + "/vault/odata/vault.BeginTransaction");
+    transactionIDRequest.then(function(transactionResponse) {
+            transactionID = JSON.parse(transactionResponse.responseText.toString()).transactionId;
+        })
+        .then(function() {
+            // var
+        })
+        .catch(function() {
+            alert("Unable to connect to server");
+        });
+
     // return new Promise(function(resolve, reject) {
     //     // Creating the POST request to make a new report
     //     var beginTransactionRequest = new XMLHttpRequest();
@@ -292,6 +307,41 @@ function uploadImage() {
 }
 
 /**
+ * Shows the user a list of all problem reports they have submitted
+ */
+function showUserReports() {
+    // Clearing any previous content
+    var module = document.getElementById("allReportsModule");
+    while (module.firstChild) {
+        module.removeChild(module.firstChild);
+    }
+
+    var request = httpGet(oauthToken, serverURL + "/server/odata/PR?$filter=reported_by eq '" + userID + "'");
+    request.then(function(response) {
+            var responseBody = JSON.parse(response.responseText).value;
+
+            // looping through the response to create a card for each response
+            for (var i = 0; i < responseBody.length; i++) {
+                var card = document.createElement("div");
+                card.classList.add("card");
+
+                var problemReport = responseBody[i];
+                var styleNode = document.createElement("h3");
+                var textNode = document.createTextNode("" + problemReport.item_number);
+                styleNode.appendChild(textNode);
+                card.appendChild(styleNode);
+                card.appendChild(document.createTextNode(problemReport.title));
+                card.appendChild(document.createElement("br"));
+                card.appendChild(document.createTextNode(problemReport.state));
+                module.appendChild(card);
+            }
+        })
+        .catch(function() {
+            alert("Unable to connect to server");
+        });
+}
+
+/**
  * Takes the user's username and get's the user's id from the server
  */
 function getUserID() {
@@ -303,4 +353,21 @@ function getUserID() {
             //TODO: Implement better error page
             alert("Username not found");
         });
+}
+
+/**
+ * Generates new guid
+ */
+function generateNewGuid() {
+    function randomDigit() {
+        if (crypto && crypto.getRandomValues) {
+            var rands = new Uint8Array(1);
+            crypto.getRandomValues(rands);
+            return (rands[0] % 16).toString(16);
+        } else {
+            return ((Math.random() * 16) | 0).toString(16);
+        }
+    }
+    var crypto = window.crypto || window.msCrypto;
+    return 'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g, randomDigit);
 }

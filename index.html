@@ -36,7 +36,7 @@
     <div id="sideNav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a onclick="showModule('newReportModule')" href="#">Create New Report</a>
-        <a onclick="showModule('allReportsModule')" href="#">Show Open Reports</a>
+        <a onclick="showModule('allReportsModule'); showUserReports();" href="#">Show Open Reports</a>
         <a onclick="signOut()" href="#">Sign Out</a>
     </div>
 
@@ -77,23 +77,21 @@
         </div>
         <div id="newReportModule" class="modules">
             <form>
-                <div id="titleDiv" class="container">
-                    <label for="title"><b>Title</b></label>
-                    <input id="title" name="title" class="inputText" type="text" placeholder="Problem Summary"></input>
+                <label for="title"><b>Title</b></label>
+                <input id="title" name="title" class="inputText" type="text" placeholder="Problem Summary"></input>
 
-                    <label for="problemDate"><b>Date</b></label>
-                    <input type="date" id="problemDate" name="problemDate" value="">
+                <label for="problemDate"><b>Date</b></label>
+                <input type="date" id="problemDate" name="problemDate" value="">
 
-                    <label for="description"><b>Description</b></label>
-                    <textarea id="description" placeholder="Describe the problem"></textarea>
+                <label for="description"><b>Description</b></label>
+                <textarea id="description" placeholder="Describe the problem"></textarea>
 
 
-                    <input type="file" id="imageUpload" onchange="getImage();" accept="image/*"></input>
-                    <button id="photoButton" onclick="document.getElementById('imageUpload').click(); return false;">
-                    </button>
+                <input type="file" id="imageUpload" onchange="getImage();" accept="image/*"></input>
+                <button id="photoButton" onclick="document.getElementById('imageUpload').click(); return false;">
+                </button>
 
-                    <button type="submit" onclick="getLocation(); return false;">Submit Problem Report</button>
-                </div>
+                <button type="submit" onclick="getLocation(); return false;">Submit Problem Report</button>
             </form>
         </div>
         <div id="allReportsModule" class="modules">
