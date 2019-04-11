@@ -4,7 +4,6 @@ var database = null;
 var clientID = "ProblemReporter";
 var username = null;
 var userID = null;
-var image = null;
 
 /**
  * Initializes the main page
@@ -129,6 +128,7 @@ function loginFromUI() {
     let rememberMe = document.getElementById("rememberMe").value;
     password = md5(password);
 
+    // logging in the user
     login(password, rememberMe);
 
     return false;
@@ -188,51 +188,51 @@ function signOut() {
 }
 
 /**
- * Function to get an image from the user and set it to the photo button
+ * Gets the image from the user and set it to the photo button
  */
 function getImage() {
+    var image = null;
     var file = document.getElementById("imageUpload").files[0];
     var reader = new FileReader();
 
     reader.onload = function() {
-        document.getElementById('photoButton').style.backgroundImage = "url(" + reader.result + ")";
+        debugger;
+        image = "url(" + reader.result + ")";
+        document.getElementById('photoButton').style.backgroundImage = image;
     };
 
-    if (file) {
-        image = reader.readAsDataURL(file);
-    }
+    return image;
 }
 
 /**
  * Get's the user's location and logs it to the console
  */
 function getLocation() {
-    // if (navigator.geolocation) {
-    //     navigator.geolocation.getCurrentPosition(function(position) {
-    //         var loc = "Latitude: " + position.coords.latitude +
-    //             " - Longitude: " + position.coords.longitude;
-    //         submitReport(loc);
-    //     });
-    // } else {
-    //     console.error = "Geolocation is not supported by this browser.";
-    //     submitReport(null);
-    // }
-    submitReport(null);
+    var location = null;
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            location = "Latitude: " + position.coords.latitude +
+                " - Longitude: " + position.coords.longitude;
+        });
+    } else {
+        console.error = "Geolocation is not supported by this browser.";
+    };
 
-    return false;
+    return location;
 }
 
 /**
  * Get's the user's input from the server and submits the report
- * @param {*} loc The location of the problem
  */
-function submitReport(loc) {
+function submitReport() {
     let reportURL = serverURL + "/Server/OData/PR";
 
     // getting the form info
     var title = document.getElementById("title").value;
     var description = document.getElementById("description").value;
     var problemDate = document.getElementById("problemDate").value;
+    var location = getLocation();
+    var image = getImage();
 
     return new Promise(function(resolve, reject) {
         // Creating the POST request to make a new report
@@ -253,12 +253,14 @@ function submitReport(loc) {
         // if (problemDate !== "") {
         //     body["problemDate"] = problemDate;
         // }
-        if (loc !== null) {
-            body["location"] = loc;
-        }
+
+        // Commented out because of lack of HTTPS
+        // if (location !== null) {
+        //     body["location"] = loc;
+        // }
         if (image !== null) {
-            // body["image"] = image;
-            uploadImage();
+            uploadImage(image);
+            // body["image"] = imageID;
         }
         body = JSON.stringify(body);
 
@@ -274,11 +276,13 @@ function submitReport(loc) {
 }
 
 /**
- * Uploads the image of the problme to the server
+ * Uploads the problem image to the server
+ * @param {*} image the image to be uploaded
  */
-function uploadImage() {
+function uploadImage(image) {
     var transactionID = "";
     var fileID = generateNewGuid();
+    debugger;
 
     // Starting the transaction by getting a tansaction ID
     var transactionIDRequest = httpPost(oauthToken, serverURL + "/vault/odata/vault.BeginTransaction");
@@ -286,24 +290,14 @@ function uploadImage() {
             transactionID = JSON.parse(transactionResponse.responseText.toString()).transactionId;
         })
         .then(function() {
+            var body = {};
+            body["transactionid"] = transactionID;
+            body["Aras-ContentRange-Checksum-Type"] = "xxHashAsUInt32AsDecimalString";
             // var
         })
         .catch(function() {
             alert("Unable to connect to server");
         });
-
-    // return new Promise(function(resolve, reject) {
-    //     // Creating the POST request to make a new report
-    //     var beginTransactionRequest = new XMLHttpRequest();
-    //     beginTransactionRequest.open("POST", serverURL + "/vault/odata/vault.BeginTransaction");
-    //     beginTransactionRequest.setRequestHeader("Authorization", "Bearer " + oauthToken);
-    //     beginTransactionRequest.send();
-    //     beginTransactionRequest.onreadystatechange = function() {
-    //         if (beginTransactionRequest.readyState == 4 && beginTransactionRequest.status == 200) {
-
-    //         }
-    //     }
-    // });
 }
 
 /**
@@ -324,7 +318,6 @@ function showUserReports() {
             for (var i = 0; i < responseBody.length; i++) {
                 var card = document.createElement("div");
                 card.classList.add("card");
-
                 var problemReport = responseBody[i];
                 var styleNode = document.createElement("h3");
                 var textNode = document.createTextNode("" + problemReport.item_number);
