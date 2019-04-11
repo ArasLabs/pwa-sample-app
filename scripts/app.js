@@ -201,6 +201,10 @@ function getImage() {
         document.getElementById('photoButton').style.backgroundImage = image;
     };
 
+    if (file) {
+        image = reader.readAsDataURL(file);
+    }
+
     return image;
 }
 
@@ -320,12 +324,28 @@ function showUserReports() {
                 card.classList.add("card");
                 var problemReport = responseBody[i];
                 var styleNode = document.createElement("h3");
-                var textNode = document.createTextNode("" + problemReport.item_number);
+                var textNode = document.createTextNode(problemReport.item_number);
                 styleNode.appendChild(textNode);
                 card.appendChild(styleNode);
                 card.appendChild(document.createTextNode(problemReport.title));
                 card.appendChild(document.createElement("br"));
-                card.appendChild(document.createTextNode(problemReport.state));
+
+                styleNode = document.createElement("div");
+                textNode = document.createTextNode(problemReport.state);
+                styleNode.appendChild(textNode);
+
+                // Coloring the different statuses
+                if (problemReport.state === "Submitted") {
+                    styleNode.style.color = "grey";
+                } else if (problemReport.state === "Closed") {
+                    styleNode.style.color = "green";
+                } else if (problemReport.state === "Rejected") {
+                    styleNode.style.color = "red";
+                } else {
+                    styleNode.style.color = "orange";
+                }
+                card.appendChild(styleNode);
+
                 module.appendChild(card);
             }
         })
