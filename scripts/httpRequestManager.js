@@ -42,6 +42,37 @@ function httpPost(oauthToken, url, body) {
     });
 }
 
+/**
+ * Function that will try a post a number of times
+ * @param {string} token
+ * @param {string} url 
+ * @param {*} result 
+ */
+function guaranteedHttpPost(oauthToken, url, headers, body, attempts) {
+    return new Promise(function(resolve, reject) {
+        var httpRequest = new XMLHttpRequest();
+        httpRequest.open("POST", url);
+        httpRequest.setRequestHeader("Authorization", "Bearer " + oauthToken);
+        headers = headers || [];
+        for (var i = 0; i < headers.length; i++)
+        {
+            var header = headers[i];
+            httpRequest.setRequestHeader(header.name, header.value);
+        }
+        debugger;
+        httpRequest.send(body);
+        httpRequest.onreadystatechange = function() {
+            if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+                resolve(httpRequest);
+            } else if (httpRequest.readyState == 4 && attempts !== 0) {
+                // Try again
+                return guaranteedHttpPost(oauthToken, url, headers, body, attempts - 1);
+            } else if (httpRequest.readyState == 4 && httpRequest.status == 400) {
+                return reject(null);
+            }
+        }
+    })
+}
 
 /**
  * Method to create an XML Http Request and return the response

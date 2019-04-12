@@ -5,6 +5,14 @@ var clientID = "ProblemReporter";
 var username = null;
 var userID = null;
 
+var fileDict = {
+    "Pic 1.png" : "03C54BDDE635470BAF82F7DAA4D4E936",
+    "Pic 2.png" : "AB5C8D090F8A41CE9052F2494995C64D",
+    "Pic 3.png" : "3A968B9599E8433FA2254AAA9F4202CE",
+    "Pic 4.png" : "2935136C5FCF4AEA9D035CBF16BE2A6F",
+    "Pic 5.png" : "B38E04DAD45F4F66A348B68A4897A3CE"
+}
+
 /**
  * Initializes the main page
  */
@@ -196,7 +204,6 @@ function getImage() {
     var reader = new FileReader();
 
     reader.onload = function() {
-        debugger;
         image = "url(" + reader.result + ")";
         document.getElementById('photoButton').style.backgroundImage = image;
     };
@@ -205,7 +212,7 @@ function getImage() {
         image = reader.readAsDataURL(file);
     }
 
-    return image;
+    return file;
 }
 
 /**
@@ -229,7 +236,7 @@ function getLocation() {
  * Get's the user's input from the server and submits the report
  */
 function submitReport() {
-    let reportURL = serverURL + "/Server/OData/PR";
+    let reportURL = serverURL + "/Server/OData/PR File";
 
     // getting the form info
     var title = document.getElementById("title").value;
@@ -246,14 +253,17 @@ function submitReport() {
 
         // set body of request using form data
         let body = {};
-        body["reported_by"] = userID;
+        let source_id = {};
+        source_id["reported_by"] = userID;
 
         if (title !== "") {
-            body["title"] = title;
+            source_id["title"] = title;
         }
         if (description !== "") {
-            body["description"] = description;
+            source_id["description"] = description;
         }
+        body["source_id"] = source_id;
+        body["related_id"] = fileDict[image.name];
         // if (problemDate !== "") {
         //     body["problemDate"] = problemDate;
         // }
@@ -266,6 +276,7 @@ function submitReport() {
             uploadImage(image);
             // body["image"] = imageID;
         }
+
         body = JSON.stringify(body);
 
         createReportRequest.send(body);
@@ -284,24 +295,77 @@ function submitReport() {
  * @param {*} image the image to be uploaded
  */
 function uploadImage(image) {
-    var transactionID = "";
-    var fileID = generateNewGuid();
-    debugger;
+    // Split our file into content chunks
+    var chunkSize = 4096;
 
     // Starting the transaction by getting a tansaction ID
     var transactionIDRequest = httpPost(oauthToken, serverURL + "/vault/odata/vault.BeginTransaction");
     transactionIDRequest.then(function(transactionResponse) {
-            transactionID = JSON.parse(transactionResponse.responseText.toString()).transactionId;
+            var transactionID = JSON.parse(transactionResponse.responseText.toString()).transactionId;
+            return uploadFileInChunks(chunkSize, image, transactionID);
         })
-        .then(function() {
-            var body = {};
-            body["transactionid"] = transactionID;
-            body["Aras-ContentRange-Checksum-Type"] = "xxHashAsUInt32AsDecimalString";
-            // var
+        .then(function(response) {
         })
         .catch(function() {
             alert("Unable to connect to server");
         });
+}
+
+function uploadFileInChunks(chunkSize, file, transactionID)
+{
+    // Build our blob array
+    var fileID = generateNewGuid().split('-').join('').toUpperCase();
+    // Split our file into content chunks
+    var chunkUploadPromiseArray = new Array();
+    var chunkUploadAttempts = 5;
+    var i = 0;
+    while (i < file.size)
+    {
+        var endChunkSize = i + chunkSize;
+        endChunkSize = (endChunkSize < file.size) ? endChunkSize : file.size;
+        var chunkBlob = file.slice(i, endChunkSize);
+
+        var headers = [];
+        headers.push({
+            name : "Content-Disposition",
+            value : "attachment; filename*=utf-8''" + file.name
+        });
+        headers.push({
+            name : "Content-Range",
+            value: "bytes " + i + "-" + endChunkSize + "/" + file.size
+        });
+        headers.push({
+            name : "Content-Type",
+            value : "application/octet-stream"
+        });
+        headers.push({
+            name: "Aras-Content-Range-Checksum",
+            value : md5(chunkBlob) // TODO: Update this with the actual calculation of the checksum
+        });
+        headers.push({
+            name : "Aras-Content-Range-Checksum-Type",
+            value : "xxHashAsUInt32AsDecimalString"
+        });
+        headers.push({
+            name : "transactionId",
+            value : transactionID
+        });
+
+        var uploadUrl = serverURL + "/vault/odata/vault.UploadFile?fileId=" + fileID;
+        chunkUploadPromiseArray.push(guaranteedHttpPost(oauthToken, uploadUrl, headers, chunkBlob, chunkUploadAttempts));
+
+        i = endChunkSize + 1;
+    }
+
+    return Promise.all(chunkUploadPromiseArray).then(function(values) {
+        var completeUploadRequest = httpPost(oauthToken, serverURL + "/vault/odata/vault.CommitTransaction");
+        completeUploadRequest.then(function(fileUploadResponse) {
+            // Do with this what you will
+        })
+        .catch(function() {
+            alert("Unable to connect to server");
+        })
+    })
 }
 
 /**
