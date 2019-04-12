@@ -358,9 +358,13 @@ function showUserReports() {
  * Takes the user's username and get's the user's id from the server
  */
 function getUserID() {
+    let rememberMe = document.getElementById("rememberMe").value;
     var request = httpGet(oauthToken, serverURL + "/server/odata/Alias?$expand=related_id&$filter=source_id/login_name eq '" + username + "'");
     request.then(function(response) {
             userID = JSON.parse(response.responseText.toString()).value[0].related_id.id;
+            if (rememberMe && window.localStorage) {
+                window.localStorage.setItem("userID", userID);
+            }
         })
         .catch(function() {
             //TODO: Implement better error page
