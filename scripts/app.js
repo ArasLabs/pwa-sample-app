@@ -305,7 +305,8 @@ function uploadImage(image) {
 function uploadFileInChunks(chunkSize, file, transactionID)
 {
     // Build our blob array
-    var fileID = generateNewGuid().split('-').join('').toUpperCase();
+    var fileID = generateNewGuid();
+
     // Split our file into content chunks
     var chunkUploadPromiseArray = new Array();
     var chunkUploadAttempts = 5;
@@ -441,5 +442,5 @@ function generateNewGuid() {
         }
     }
     var crypto = window.crypto || window.msCrypto;
-    return 'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g, randomDigit);
+    return 'xxxxxxxxxxxx4xxx8xxxxxxxxxxxxxxx'.replace(/x/g, randomDigit).toUpperCase();
 }
