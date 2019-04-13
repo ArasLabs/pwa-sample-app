@@ -332,7 +332,7 @@ function uploadFileInChunks(chunkSize, file, transactionID)
         });
         headers.push({
             name: "Aras-Content-Range-Checksum",
-            value : md5(chunkBlob) // TODO: Update this with the actual calculation of the checksum
+            value : calcChecksum(chunkBlob)
         });
         headers.push({
             name : "Aras-Content-Range-Checksum-Type",
@@ -358,6 +358,15 @@ function uploadFileInChunks(chunkSize, file, transactionID)
             alert("Unable to connect to server");
         })
     })
+}
+
+/**
+ * Generates a checksum for the provided string
+ * @param {*} chunkBlob 
+ */
+function calcChecksum(chunkBlob) {
+    var seed = '0';  // always zero
+    return XXH.h32(chunkBlob, seed).toString(10);
 }
 
 /**
