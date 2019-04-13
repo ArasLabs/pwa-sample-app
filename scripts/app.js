@@ -228,7 +228,8 @@ function getLocation() {
  * Get's the user's input from the server and submits the report
  */
 function submitReport() {
-    let reportURL = serverURL + "/Server/OData/PR File";
+    let reportURL = serverURL + "/Server/OData/PR";
+    console.log("reportURL: " + reportURL);
 
     // getting the form info
     var title = document.getElementById("title").value;
@@ -238,6 +239,14 @@ function submitReport() {
     var image = getImage();
 
     return new Promise(function(resolve, reject) {
+        
+        if (image !== null) {
+            var image_id = uploadImage(image);
+            resolve(image_id);
+        }
+
+    }).then(function(fileID) {
+
         // Creating the POST request to make a new report
         var createReportRequest = new XMLHttpRequest();
         createReportRequest.open("POST", reportURL);
@@ -245,16 +254,21 @@ function submitReport() {
 
         // set body of request using form data
         let body = {};
-        let source_id = {};
-        source_id["reported_by"] = userID;
+        // let source_id = {};
+        // source_id["reported_by"] = userID;
+        body["reported_by"] = userID;
 
         if (title !== "") {
-            source_id["title"] = title;
+            // source_id["title"] = title;
+            body["title"] = title;
         }
+
         if (description !== "") {
-            source_id["description"] = description;
+            // source_id["description"] = description;
+            body["description"] = description;
         }
-        body["source_id"] = source_id;
+
+        // body["source_id"] = source_id;
 
         if (problemDate !== "") {
             body["problemDate"] = problemDate;
@@ -264,11 +278,9 @@ function submitReport() {
         // if (location !== null) {
         //     body["location"] = loc;
         // }
-        if (image !== null) {
-            var image_id = uploadImage(image);
-            if (image_id) {
-                body["related_id"] = image_id;
-            }
+
+        if (fileID) {
+            body["css"] = fileID;
         }
 
         body = JSON.stringify(body);
@@ -297,6 +309,7 @@ function uploadImage(image) {
     var transactionIDRequest = httpPost(oauthToken, serverURL + "/vault/odata/vault.BeginTransaction");
     transactionIDRequest.then(function(transactionResponse) {
             var transactionID = JSON.parse(transactionResponse.responseText.toString()).transactionId;
+            console.log("transactionID: " + transactionID);
             return uploadFileInChunks(chunkSize, image, transactionID);
         })
         .then(function(response) {
@@ -326,6 +339,10 @@ function uploadFileInChunks(chunkSize, file, transactionID)
             name : "Content-Disposition",
             value : "attachment; filename*=utf-8''" + file.name
         });
+        // headers.push({
+        //     name : "Content-Length",
+        //     value: endChunkSize - i + 1
+        // });
         headers.push({
             name : "Content-Range",
             value: "bytes " + i + "-" + endChunkSize + "/" + file.size
