@@ -255,9 +255,10 @@ function submitReport() {
             source_id["description"] = description;
         }
         body["source_id"] = source_id;
-        // if (problemDate !== "") {
-        //     body["problemDate"] = problemDate;
-        // }
+
+        if (problemDate !== "") {
+            body["problemDate"] = problemDate;
+        }
 
         // Commented out because of lack of HTTPS
         // if (location !== null) {
