@@ -265,8 +265,10 @@ function submitReport() {
         //     body["location"] = loc;
         // }
         if (image !== null) {
-            uploadImage(image);
-            // body["image"] = imageID;
+            var image_id = uploadImage(image);
+            if (image_id) {
+                body["related_id"] = image_id;
+            }
         }
 
         body = JSON.stringify(body);
@@ -284,6 +286,7 @@ function submitReport() {
 
 /**
  * Uploads the problem image to the server
+ * Returns the id of the created file
  * @param {*} image the image to be uploaded
  */
 function uploadImage(image) {
@@ -354,6 +357,7 @@ function uploadFileInChunks(chunkSize, file, transactionID)
         var completeUploadRequest = httpPost(oauthToken, serverURL + "/vault/odata/vault.CommitTransaction");
         completeUploadRequest.then(function(fileUploadResponse) {
             // Do with this what you will
+            return JSON.parse(fileUploadResponse.responseText.toString()).id;
         })
         .catch(function() {
             alert("Unable to connect to server");
