@@ -5,14 +5,6 @@ var clientID = "ProblemReporter";
 var username = null;
 var userID = null;
 
-var fileDict = {
-    "Pic 1.png" : "03C54BDDE635470BAF82F7DAA4D4E936",
-    "Pic 2.png" : "AB5C8D090F8A41CE9052F2494995C64D",
-    "Pic 3.png" : "3A968B9599E8433FA2254AAA9F4202CE",
-    "Pic 4.png" : "2935136C5FCF4AEA9D035CBF16BE2A6F",
-    "Pic 5.png" : "B38E04DAD45F4F66A348B68A4897A3CE"
-}
-
 /**
  * Initializes the main page
  */
@@ -263,7 +255,6 @@ function submitReport() {
             source_id["description"] = description;
         }
         body["source_id"] = source_id;
-        body["related_id"] = fileDict[image.name];
         // if (problemDate !== "") {
         //     body["problemDate"] = problemDate;
         // }
