@@ -5,7 +5,6 @@
  */
 function httpGet(oauthToken, url) {
     return new Promise(function(resolve, reject) {
-        // debugger;
         var httpRequest = new XMLHttpRequest();
         httpRequest.open("GET", url);
         httpRequest.setRequestHeader("Authorization", "Bearer " + oauthToken);
@@ -59,7 +58,6 @@ function guaranteedHttpPost(oauthToken, url, headers, body, attempts) {
             var header = headers[i];
             httpRequest.setRequestHeader(header.name, header.value);
         }
-        debugger;
         httpRequest.send(body);
         httpRequest.onreadystatechange = function() {
             if (httpRequest.readyState == 4 && httpRequest.status == 200) {
@@ -96,6 +94,11 @@ function createXmlHttpRequest(url, result) {
     xhttp.send();
 }
 
+/**
+ * 
+ * @param {*} response 
+ * @param {*} tag 
+ */
 function getXMLElementsFromXmlHttpResponse(response, tag) {
     parser = new DOMParser();
     xmlDoc = parser.parseFromString(response, "text/xml");
@@ -103,6 +106,10 @@ function getXMLElementsFromXmlHttpResponse(response, tag) {
     return xmlDoc.getElementsByTagName(tag);
 }
 
+/**
+ * 
+ * @param {*} evt 
+ */
 function transferFailed(evt) {
     console.log("An error occurred while transferring the file.");
 }
