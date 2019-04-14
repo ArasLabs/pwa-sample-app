@@ -322,27 +322,25 @@ function uploadImage(image) {
 function uploadFileInChunks(chunkSize, file, transactionID)
 {
     // Build our blob array
-    var fileID = generateNewGuid();
+    var fileID = generateNewGuid().split('-').join('').toUpperCase();
 
     // Split our file into content chunks
     var chunkUploadPromiseArray = new Array();
     var chunkUploadAttempts = 5;
     var i = 0;
+    chunkSize = file.size;
     while (i < file.size)
     {
         var endChunkSize = i + chunkSize;
         endChunkSize = (endChunkSize < file.size) ? endChunkSize : file.size;
-        var chunkBlob = file.slice(i, endChunkSize);
+        endChunkSize = endChunkSize - 1;
+        var chunkBlob = file.slice(i, (endChunkSize + 1));
 
         var headers = [];
         headers.push({
             name : "Content-Disposition",
             value : "attachment; filename*=utf-8''" + file.name
         });
-        // headers.push({
-        //     name : "Content-Length",
-        //     value: endChunkSize - i + 1
-        // });
         headers.push({
             name : "Content-Range",
             value: "bytes " + i + "-" + endChunkSize + "/" + file.size
@@ -351,16 +349,17 @@ function uploadFileInChunks(chunkSize, file, transactionID)
             name : "Content-Type",
             value : "application/octet-stream"
         });
+        // These aren't necessary
+        // headers.push({
+        //     name: "Aras-Content-Range-Checksum",
+        //     value : calcChecksum(chunkBlob)
+        // });
+        // headers.push({
+        //     name : "Aras-Content-Range-Checksum-Type",
+        //     value : "xxHashAsUInt32AsDecimalString"
+        // });
         headers.push({
-            name: "Aras-Content-Range-Checksum",
-            value : calcChecksum(chunkBlob)
-        });
-        headers.push({
-            name : "Aras-Content-Range-Checksum-Type",
-            value : "xxHashAsUInt32AsDecimalString"
-        });
-        headers.push({
-            name : "transactionId",
+            name : "transactionid",
             value : transactionID
         });
 
