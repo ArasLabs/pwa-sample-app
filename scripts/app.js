@@ -392,14 +392,14 @@ function uploadFileInChunks(chunkSize, file, transactionID)
         console.log("commit_headers : " + commit_headers);
 
         var commit_body = "--";
-        commit_body += boundary + "\n";
-        commit_body += "Content-Type: application/http\n'n";
-        commit_body += "POST " + serverURL + "/server/odata/File HTTP/1.1\n";
-        commit_body += "Content-Type: application/json\n\n";
+        commit_body += boundary + "\r\n";
+        commit_body += "Content-Type: application/http\r\n\r\n";
+        commit_body += "POST " + serverURL + "/server/odata/File HTTP/1.1\r\n";
+        commit_body += "Content-Type: application/json\r\n\r\n";
         commit_body += '{"id":"' + fileID + '",';
         commit_body += '"filename":"' + file.name + '",';
         commit_body += '"file_size":' + file.size + ',';
-        commit_body += '"Located":[{"file_version":1,"related_id":"67BBB9204FE84A8981ED8313049BA06C"}]}\n';
+        commit_body += '"Located":[{"file_version":1,"related_id":"67BBB9204FE84A8981ED8313049BA06C"}]}\r\n';
         commit_body += "--" + boundary + "--";
 
         console.log("commit_body : " + commit_body);
