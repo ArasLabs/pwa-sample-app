@@ -394,7 +394,7 @@ function uploadFileInChunks(chunkSize, file, transactionID)
         var commit_body = "--";
         commit_body += boundary + "\r\n";
         commit_body += "Content-Type: application/http\r\n\r\n";
-        commit_body += "POST " + serverURL + "/server/odata/File HTTP/1.1\r\n";
+        commit_body += "POST " + serverURL + "/Server/odata/File HTTP/1.1\r\n";
         commit_body += "Content-Type: application/json\r\n\r\n";
         commit_body += '{"id":"' + fileID + '",';
         commit_body += '"filename":"' + file.name + '",';
