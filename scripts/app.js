@@ -370,9 +370,36 @@ function uploadFileInChunks(chunkSize, file, transactionID)
     }
 
     return Promise.all(chunkUploadPromiseArray).then(function(values) {
-        var completeUploadRequest = httpPost(oauthToken, serverURL + "/vault/odata/vault.CommitTransaction");
+        var boundary = "batch_" + fileID;
+        var commit_headers = [];
+        commit_headers.push({
+            name : "Content-Type",
+            value : "multipart/mixed; boundary=" + boundary
+        });
+        commit_headers.push({
+            name : "transactionid",
+            value : transactionID
+        });
+
+        console.log("commit_headers : " + commit_headers);
+
+        var commit_body = "--";
+        commit_body += boundary + "\n";
+        commit_body += "Content-Type: application/http\n'n";
+        commit_body += "POST " + serverURL + "/odata/File HTTP/1.1\n";
+        commit_body += "Content-Type: application/json\n\n";
+        commit_body += '{"id":"' + fileID + '",';
+        commit_body += '"filename":"' + file.name + '",';
+        commit_body += '"file_size":' + file.size + ',';
+        commit_body += '"Located":[{"file_version":1,"related_id":"67BBB9204FE84A8981ED8313049BA06C"}]}\n';
+        commit_body += "--" + boundary + "--";
+
+        console.log("commit_body : " + commit_body);
+        
+        var completeUploadRequest = guaranteedHttpPost(oauthToken, serverURL + "/vault/odata/vault.CommitTransaction", commit_headers, commit_body, 5);
         completeUploadRequest.then(function(fileUploadResponse) {
             // Do with this what you will
+            console.log("commit response : " + fileUploadResponse.responseText.toString());
             return JSON.parse(fileUploadResponse.responseText.toString()).id;
         })
         .catch(function() {
