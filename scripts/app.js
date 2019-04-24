@@ -19,6 +19,7 @@ function initialize() {
     document.getElementById("problemDate").value = today;
     let urlComponents = window.location.href.split('/');
     serverURL = urlComponents[0] + "//" + urlComponents[1] + "/" + urlComponents[2] + "/" + urlComponents[3];
+    console.log(serverURL);
 
     window.onclick = function(event) {
         if (!event.target.matches('#navButton') && event.target.getAttribute("id") !== 'fa fa-bars') {
