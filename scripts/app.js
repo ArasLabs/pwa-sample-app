@@ -242,10 +242,14 @@ function submitReport() {
         
         if (image !== null) {
             var image_id = uploadImage(image);
+            console.log("image_id after uploadImage execution : " + image_id);
             resolve(image_id);
+        } else {
+            console.log("image is null");
         }
 
     }).then(function(fileID) {
+        console.log("resolving submitReport promise with fileID : " + fileID);
 
         // Creating the POST request to make a new report
         var createReportRequest = new XMLHttpRequest();
@@ -288,7 +292,7 @@ function submitReport() {
         createReportRequest.send(body);
         createReportRequest.onreadystatechange = function() {
             if (createReportRequest.readyState == 4 && createReportRequest.status == 201) {
-                console.log(createReportRequest.responseText)
+                console.log("createReportRequest : " + createReportRequest.responseText)
                 var reportNumber = JSON.parse(createReportRequest.responseText.toString()).item_number;
                 alert("Report " + reportNumber + " was created successfully!");
             }
@@ -323,6 +327,8 @@ function uploadFileInChunks(chunkSize, file, transactionID)
 {
     // Build our blob array
     var fileID = generateNewGuid().split('-').join('').toUpperCase();
+
+    console.log("starting uploadFileInChunks for new file id : " + fileID);
 
     // Split our file into content chunks
     var chunkUploadPromiseArray = new Array();
@@ -370,6 +376,8 @@ function uploadFileInChunks(chunkSize, file, transactionID)
     }
 
     return Promise.all(chunkUploadPromiseArray).then(function(values) {
+        console.log("starting promise with chunkUploadPromiseArray : " + chunkUploadPromiseArray);
+
         var boundary = "batch_" + fileID;
         var commit_headers = [];
         commit_headers.push({
@@ -386,7 +394,7 @@ function uploadFileInChunks(chunkSize, file, transactionID)
         var commit_body = "--";
         commit_body += boundary + "\n";
         commit_body += "Content-Type: application/http\n'n";
-        commit_body += "POST " + serverURL + "/odata/File HTTP/1.1\n";
+        commit_body += "POST " + serverURL + "/server/odata/File HTTP/1.1\n";
         commit_body += "Content-Type: application/json\n\n";
         commit_body += '{"id":"' + fileID + '",';
         commit_body += '"filename":"' + file.name + '",';
@@ -403,6 +411,7 @@ function uploadFileInChunks(chunkSize, file, transactionID)
             return JSON.parse(fileUploadResponse.responseText.toString()).id;
         })
         .catch(function() {
+            console.log("Error in uploadFileInChunks promise : Unable to connect to server");
             alert("Unable to connect to server");
         })
     })

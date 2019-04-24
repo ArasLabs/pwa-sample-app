@@ -26,6 +26,10 @@ function httpGet(oauthToken, url) {
  * @param {*} body
  */
 function httpPost(oauthToken, url, body) {
+    console.log("executing httpPost with the following parameters......");
+    console.log("url : " + url);
+    console.log("body : \n" + body);
+
     return new Promise(function(resolve, reject) {
         var httpRequest = new XMLHttpRequest();
         httpRequest.open("POST", url);
@@ -48,6 +52,12 @@ function httpPost(oauthToken, url, body) {
  * @param {*} result 
  */
 function guaranteedHttpPost(oauthToken, url, headers, body, attempts) {
+    console.log("executing guaranteedHttpPost with the following parameters......");
+    console.log("url : " + url);
+    console.log("headers : " + headers);
+    console.log("body : \n" + body);
+    console.log("attempts : " + attempts);
+
     return new Promise(function(resolve, reject) {
         var httpRequest = new XMLHttpRequest();
         httpRequest.open("POST", url);
