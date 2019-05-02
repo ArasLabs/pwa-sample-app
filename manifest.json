@@ -1,15 +1,18 @@
 {
     "name": "Problem Reporter",
     "short_name": "Problem Reporter",
-    "icons": [{
+    "icons": [
+        {
             "src": "images/icons/icon32-x32.png",
             "sizes": "32x32",
             "type": "image/png"
-        }, {
+        },
+        {
             "src": "images/icons/icon-64x64.png",
             "sizes": "64x64",
             "type": "image/png"
-        }, {
+        },
+        {
             "src": "images/icons/icon-144x144.png",
             "sizes": "144x144",
             "type": "image/png"
