@@ -19,7 +19,6 @@ function initialize() {
     document.getElementById("problemDate").value = today;
     let urlComponents = window.location.href.split('/');
     serverURL = urlComponents[0] + "//" + urlComponents[2] + "/" + urlComponents[3];
-    console.log(serverURL);
 
     window.onclick = function(event) {
         if (!event.target.matches('#navButton') && event.target.getAttribute("id") !== 'fa fa-bars') {
@@ -230,7 +229,6 @@ function getLocation() {
  */
 function submitReport() {
     let reportURL = serverURL + "/Server/OData/PR";
-    console.log("reportURL: " + reportURL);
 
     // getting the form info
     var title = document.getElementById("title").value;
@@ -243,14 +241,10 @@ function submitReport() {
         
         if (image !== null) {
             var image_id = uploadImage(image);
-            console.log("image_id after uploadImage execution : " + image_id);
             resolve(image_id);
-        } else {
-            console.log("image is null");
         }
 
     }).then(function(fileID) {
-        console.log("resolving submitReport promise with fileID : " + fileID);
 
         // Creating the POST request to make a new report
         var createReportRequest = new XMLHttpRequest();
@@ -259,30 +253,23 @@ function submitReport() {
 
         // set body of request using form data
         let body = {};
-        // let source_id = {};
-        // source_id["reported_by"] = userID;
         body["reported_by"] = userID;
 
         if (title !== "") {
-            // source_id["title"] = title;
             body["title"] = title;
         }
 
         if (description !== "") {
-            // source_id["description"] = description;
             body["description"] = description;
         }
-
-        // body["source_id"] = source_id;
 
         if (problemDate !== "") {
             body["problemDate"] = problemDate;
         }
 
-        // Commented out because of lack of HTTPS
-        // if (location !== null) {
-        //     body["location"] = loc;
-        // }
+        if (location !== null) {
+            body["location"] = loc;
+        }
 
         if (fileID) {
             body["css"] = fileID;
@@ -314,7 +301,6 @@ function uploadImage(image) {
     var transactionIDRequest = httpPost(oauthToken, serverURL + "/vault/odata/vault.BeginTransaction");
     transactionIDRequest.then(function(transactionResponse) {
             var transactionID = JSON.parse(transactionResponse.responseText.toString()).transactionId;
-            console.log("transactionID: " + transactionID);
             return uploadFileInChunks(chunkSize, image, transactionID);
         })
         .then(function(response) {
@@ -328,8 +314,6 @@ function uploadFileInChunks(chunkSize, file, transactionID)
 {
     // Build our blob array
     var fileID = generateNewGuid().split('-').join('').toUpperCase();
-
-    console.log("starting uploadFileInChunks for new file id : " + fileID);
 
     // Split our file into content chunks
     var chunkUploadPromiseArray = new Array();
@@ -368,7 +352,6 @@ function uploadFileInChunks(chunkSize, file, transactionID)
     }
 
     return Promise.all(chunkUploadPromiseArray).then(function(values) {
-        console.log("starting promise with chunkUploadPromiseArray : " + chunkUploadPromiseArray);
 
         var boundary = "batch_" + fileID;
         var commit_headers = [];
@@ -381,8 +364,6 @@ function uploadFileInChunks(chunkSize, file, transactionID)
             value : transactionID
         });
 
-        console.log("commit_headers : " + commit_headers);
-
         var commit_body = "--";
         commit_body += boundary + "\r\n";
         commit_body += "Content-Type: application/http\r\n\r\n";
@@ -393,12 +374,9 @@ function uploadFileInChunks(chunkSize, file, transactionID)
         commit_body += '"file_size":' + file.size + ',';
         commit_body += '"Located":[{"file_version":1,"related_id":"67BBB9204FE84A8981ED8313049BA06C"}]}\r\n';
         commit_body += "--" + boundary + "--";
-
-        console.log("commit_body : " + commit_body);
         
         var completeUploadRequest = guaranteedHttpPost(oauthToken, serverURL + "/vault/odata/vault.CommitTransaction", commit_headers, commit_body, 5);
         completeUploadRequest.then(function(fileUploadResponse) {
-            // Do with this what you will
             console.log("commit response : " + fileUploadResponse.responseText.toString());
             return JSON.parse(fileUploadResponse.responseText.toString()).id;
         })
