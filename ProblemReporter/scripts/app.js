@@ -349,7 +349,7 @@ function uploadFileInChunks(chunkSize, file, transactionID) {
         var headers = [];
         headers.push({
             name: "Content-Disposition",
-            value: "attachment; filename*=utf-8''" + file.name
+            value: "attachment; filename*=utf-8''" + encodeURI(file.name)
         });
         headers.push({
             name: "Content-Range",
