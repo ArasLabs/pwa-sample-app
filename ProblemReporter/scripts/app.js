@@ -20,7 +20,7 @@ function initialize() {
     let urlComponents = window.location.href.split('/');
     serverURL = urlComponents[0] + "//" + urlComponents[2] + "/" + urlComponents[3];
 
-    window.onclick = function(event) {
+    window.onclick = function (event) {
         if (!event.target.matches('#navButton') && event.target.getAttribute("id") !== 'fa fa-bars') {
             closeNav();
         }
@@ -101,7 +101,7 @@ function showModule(moduleName) {
     document.getElementById("loader").style.display = "block";
 
     // Shows the module after a brief loading period
-    setTimeout(function() {
+    setTimeout(function () {
         document.getElementById(moduleName).style.display = "block";
         document.getElementById("loader").style.display = "none";
     }, 500);
@@ -143,7 +143,7 @@ function login(password, rememberMe) {
     // attempting login
     var afterLogin = oauthLogin(serverURL, database, username, password, clientID);
 
-    afterLogin.then(function(token) {
+    afterLogin.then(function (token) {
         oauthToken = token;
         document.getElementById("loginDialog").style.display = "none";
 
@@ -160,7 +160,7 @@ function login(password, rememberMe) {
             window.localStorage.setItem("password", password);
             window.localStorage.setItem("userID", userID);
         }
-    }).catch(function() {
+    }).catch(function () {
         //TODO: Implement better error page
         alert("Invalid credentials. Please try again");
     })
@@ -195,7 +195,7 @@ function getImage() {
     var file = document.getElementById("imageUpload").files[0];
     var reader = new FileReader();
 
-    reader.onload = function() {
+    reader.onload = function () {
         image = "url(" + reader.result + ")";
         document.getElementById('photoButton').style.backgroundImage = image;
     };
@@ -213,7 +213,7 @@ function getImage() {
 function getLocation() {
     var location = null;
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
+        navigator.geolocation.getCurrentPosition(function (position) {
             location = "Latitude: " + position.coords.latitude +
                 " - Longitude: " + position.coords.longitude;
         });
@@ -229,6 +229,7 @@ function getLocation() {
  */
 function submitReport() {
     let reportURL = serverURL + "/Server/OData/PR";
+    let reportFileURL = serverURL + "/Server/OData/PR File";
 
     // getting the form info
     var title = document.getElementById("title").value;
@@ -237,14 +238,14 @@ function submitReport() {
     var location = getLocation();
     var image = getImage();
 
-    return new Promise(function(resolve, reject) {
-        
+    return new Promise(function (resolve, reject) {
+
         if (image !== null) {
-            var image_id = uploadImage(image);
-            resolve(image_id);
+            var uploadImageId = uploadImage(image);
+            resolve(uploadImageId);
         }
 
-    }).then(function(fileID) {
+    }).then(function (fileID) {
 
         // Creating the POST request to make a new report
         var createReportRequest = new XMLHttpRequest();
@@ -271,18 +272,38 @@ function submitReport() {
             body["location"] = loc;
         }
 
-        if (fileID) {
-            body["css"] = fileID;
-        }
-
         body = JSON.stringify(body);
 
         createReportRequest.send(body);
-        createReportRequest.onreadystatechange = function() {
+        createReportRequest.onreadystatechange = function () {
             if (createReportRequest.readyState == 4 && createReportRequest.status == 201) {
                 console.log("createReportRequest : " + createReportRequest.responseText)
-                var reportNumber = JSON.parse(createReportRequest.responseText.toString()).item_number;
-                alert("Report " + reportNumber + " was created successfully!");
+                var createReportResponse = JSON.parse(createReportRequest.responseText);
+                var reportNumber = createReportResponse.item_number;
+                var reportId = createReportResponse.id;
+
+                //add file image to the relationship 
+                if (fileID != null) {
+                    var addFileToReportRequest = new XMLHttpRequest();
+                    addFileToReportRequest.open("POST", reportFileURL);
+                    addFileToReportRequest.setRequestHeader("Authorization", "Bearer " + oauthToken);
+
+                    // set body of request using form data
+                    var relationshipBody = JSON.stringify({
+                        source_id: reportId,
+                        related_id: fileID
+                    });
+
+                    addFileToReportRequest.send(relationshipBody);
+                    addFileToReportRequest.onreadystatechange = function () {
+                        if (addFileToReportRequest.readyState == 4 && addFileToReportRequest.status == 201) {
+                            alert("Report " + reportNumber + " was created successfully!");
+                        }
+                    }
+                }
+                else {
+                    alert("Report " + reportNumber + " was created successfully!");
+                }
             }
         }
     });
@@ -298,20 +319,19 @@ function uploadImage(image) {
     var chunkSize = 4096;
 
     // Starting the transaction by getting a tansaction ID
-    var transactionIDRequest = httpPost(oauthToken, serverURL + "/vault/odata/vault.BeginTransaction");
-    transactionIDRequest.then(function(transactionResponse) {
+    return httpPost(oauthToken, serverURL + "/vault/odata/vault.BeginTransaction")
+        .then(function (transactionResponse) {
             var transactionID = JSON.parse(transactionResponse.responseText.toString()).transactionId;
-            return uploadFileInChunks(chunkSize, image, transactionID);
-        })
-        .then(function(response) {
-        })
-        .catch(function() {
+            return uploadFileInChunks(chunkSize, image, transactionID)
+                .then(function (imageId) {
+                    return imageId;
+                })
+        }).catch(function () {
             alert("Unable to connect to server");
         });
 }
 
-function uploadFileInChunks(chunkSize, file, transactionID)
-{
+function uploadFileInChunks(chunkSize, file, transactionID) {
     // Build our blob array
     var fileID = generateNewGuid().split('-').join('').toUpperCase();
 
@@ -320,8 +340,7 @@ function uploadFileInChunks(chunkSize, file, transactionID)
     var chunkUploadAttempts = 5;
     var i = 0;
     chunkSize = file.size;
-    while (i < file.size)
-    {
+    while (i < file.size) {
         var endChunkSize = i + chunkSize;
         endChunkSize = (endChunkSize < file.size) ? endChunkSize : file.size;
         endChunkSize = endChunkSize - 1;
@@ -329,20 +348,20 @@ function uploadFileInChunks(chunkSize, file, transactionID)
 
         var headers = [];
         headers.push({
-            name : "Content-Disposition",
-            value : "attachment; filename*=utf-8''" + file.name
+            name: "Content-Disposition",
+            value: "attachment; filename*=utf-8''" + file.name
         });
         headers.push({
-            name : "Content-Range",
+            name: "Content-Range",
             value: "bytes " + i + "-" + endChunkSize + "/" + file.size
         });
         headers.push({
-            name : "Content-Type",
-            value : "application/octet-stream"
+            name: "Content-Type",
+            value: "application/octet-stream"
         });
         headers.push({
-            name : "transactionid",
-            value : transactionID
+            name: "transactionid",
+            value: transactionID
         });
 
         var uploadUrl = serverURL + "/vault/odata/vault.UploadFile?fileId=" + fileID;
@@ -351,17 +370,17 @@ function uploadFileInChunks(chunkSize, file, transactionID)
         i = endChunkSize + 1;
     }
 
-    return Promise.all(chunkUploadPromiseArray).then(function(values) {
+    return Promise.all(chunkUploadPromiseArray).then(function (values) {
 
         var boundary = "batch_" + fileID;
         var commit_headers = [];
         commit_headers.push({
-            name : "Content-Type",
-            value : "multipart/mixed; boundary=" + boundary
+            name: "Content-Type",
+            value: "multipart/mixed; boundary=" + boundary
         });
         commit_headers.push({
-            name : "transactionid",
-            value : transactionID
+            name: "transactionid",
+            value: transactionID
         });
 
         var commit_body = "--";
@@ -374,17 +393,21 @@ function uploadFileInChunks(chunkSize, file, transactionID)
         commit_body += '"file_size":' + file.size + ',';
         commit_body += '"Located":[{"file_version":1,"related_id":"67BBB9204FE84A8981ED8313049BA06C"}]}\r\n';
         commit_body += "--" + boundary + "--";
-        
-        var completeUploadRequest = guaranteedHttpPost(oauthToken, serverURL + "/vault/odata/vault.CommitTransaction", commit_headers, commit_body, 5);
-        completeUploadRequest.then(function(fileUploadResponse) {
-            console.log("commit response : " + fileUploadResponse.responseText.toString());
-            return JSON.parse(fileUploadResponse.responseText.toString()).id;
-        })
-        .catch(function() {
-            console.log("Error in uploadFileInChunks promise : Unable to connect to server");
-            alert("Unable to connect to server");
-        })
-    })
+
+        return guaranteedHttpPost(oauthToken, serverURL + "/vault/odata/vault.CommitTransaction", commit_headers, commit_body, 5)
+            .then(function (fileUploadResponse) {
+                console.log("commit response : " + fileUploadResponse.responseText.toString());
+                var startIndex = fileUploadResponse.responseText.indexOf("{");
+                var endIndex = fileUploadResponse.responseText.lastIndexOf("}") + 1;
+                var jsonResponse = fileUploadResponse.responseText.substring(startIndex, endIndex);
+                return JSON.parse(jsonResponse).id;
+            })
+            .catch(function (err) {
+                console.log("Error in uploadFileInChunks promise : Unable to connect to server");
+                alert("Unable to connect to server");
+            });
+
+    });
 }
 
 /**
@@ -398,41 +421,41 @@ function showUserReports() {
     }
 
     var request = httpGet(oauthToken, serverURL + "/server/odata/PR?$filter=reported_by eq '" + userID + "'");
-    request.then(function(response) {
-            var responseBody = JSON.parse(response.responseText).value;
+    request.then(function (response) {
+        var responseBody = JSON.parse(response.responseText).value;
 
-            // looping through the response to create a card for each response
-            for (var i = 0; i < responseBody.length; i++) {
-                var card = document.createElement("div");
-                card.classList.add("card");
-                var problemReport = responseBody[i];
-                var styleNode = document.createElement("h3");
-                var textNode = document.createTextNode(problemReport.item_number);
-                styleNode.appendChild(textNode);
-                card.appendChild(styleNode);
-                card.appendChild(document.createTextNode(problemReport.title));
-                card.appendChild(document.createElement("br"));
+        // looping through the response to create a card for each response
+        for (var i = 0; i < responseBody.length; i++) {
+            var card = document.createElement("div");
+            card.classList.add("card");
+            var problemReport = responseBody[i];
+            var styleNode = document.createElement("h3");
+            var textNode = document.createTextNode(problemReport.item_number);
+            styleNode.appendChild(textNode);
+            card.appendChild(styleNode);
+            card.appendChild(document.createTextNode(problemReport.title));
+            card.appendChild(document.createElement("br"));
 
-                styleNode = document.createElement("div");
-                textNode = document.createTextNode(problemReport.state);
-                styleNode.appendChild(textNode);
+            styleNode = document.createElement("div");
+            textNode = document.createTextNode(problemReport.state);
+            styleNode.appendChild(textNode);
 
-                // Coloring the different statuses
-                if (problemReport.state === "Submitted") {
-                    styleNode.style.color = "grey";
-                } else if (problemReport.state === "Closed") {
-                    styleNode.style.color = "green";
-                } else if (problemReport.state === "Rejected") {
-                    styleNode.style.color = "red";
-                } else {
-                    styleNode.style.color = "orange";
-                }
-                card.appendChild(styleNode);
-
-                module.appendChild(card);
+            // Coloring the different statuses
+            if (problemReport.state === "Submitted") {
+                styleNode.style.color = "grey";
+            } else if (problemReport.state === "Closed") {
+                styleNode.style.color = "green";
+            } else if (problemReport.state === "Rejected") {
+                styleNode.style.color = "red";
+            } else {
+                styleNode.style.color = "orange";
             }
-        })
-        .catch(function() {
+            card.appendChild(styleNode);
+
+            module.appendChild(card);
+        }
+    })
+        .catch(function () {
             alert("Unable to connect to server");
         });
 }
@@ -443,13 +466,13 @@ function showUserReports() {
 function getUserID() {
     let rememberMe = document.getElementById("rememberMe").value;
     var request = httpGet(oauthToken, serverURL + "/server/odata/Alias?$expand=related_id&$filter=source_id/login_name eq '" + username + "'");
-    request.then(function(response) {
-            userID = JSON.parse(response.responseText.toString()).value[0].related_id.id;
-            if (rememberMe && window.localStorage) {
-                window.localStorage.setItem("userID", userID);
-            }
-        })
-        .catch(function() {
+    request.then(function (response) {
+        userID = JSON.parse(response.responseText.toString()).value[0].related_id.id;
+        if (rememberMe && window.localStorage) {
+            window.localStorage.setItem("userID", userID);
+        }
+    })
+        .catch(function () {
             //TODO: Implement better error page
             alert("Username not found");
         });
