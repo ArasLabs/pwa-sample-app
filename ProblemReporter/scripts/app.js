@@ -240,9 +240,12 @@ function submitReport() {
 
     return new Promise(function (resolve, reject) {
 
-        if (image !== null) {
+        if (image !== null && image !== undefined) {
             var uploadImageId = uploadImage(image);
             resolve(uploadImageId);
+        }
+        else {
+            resolve(null);
         }
 
     }).then(function (fileID) {
@@ -349,7 +352,7 @@ function uploadFileInChunks(chunkSize, file, transactionID) {
         var headers = [];
         headers.push({
             name: "Content-Disposition",
-            value: "attachment; filename*=utf-8''" + file.name
+            value: "attachment; filename*=utf-8''" + encodeURI(file.name)
         });
         headers.push({
             name: "Content-Range",
