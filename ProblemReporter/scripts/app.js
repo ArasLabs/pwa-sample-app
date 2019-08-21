@@ -240,9 +240,12 @@ function submitReport() {
 
     return new Promise(function (resolve, reject) {
 
-        if (image !== null) {
+        if (image !== null && image !== undefined) {
             var uploadImageId = uploadImage(image);
             resolve(uploadImageId);
+        }
+        else {
+            resolve(null);
         }
 
     }).then(function (fileID) {
