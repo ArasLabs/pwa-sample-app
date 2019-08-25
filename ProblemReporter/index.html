@@ -83,9 +83,17 @@
                 <label for="problemDate"><b>Date</b></label>
                 <input type="date" id="problemDate" name="problemDate" value="">
 
+                <label for="location"><b>Location</b></label>
+                <input type="text" id="location" name="location" maxlength="128"
+                    placeholder="Enter your Address"></input>
+                <iframe width="100%" style="min-height: 300px" id="gmap"
+                    src="https://maps.google.com/maps?t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"
+                    scrolling="no"></iframe>
+
+
+
                 <label for="description"><b>Description</b></label>
                 <textarea id="description" placeholder="Describe the problem"></textarea>
-
 
                 <input type="file" id="imageUpload" onchange="getImage();" accept="image/*"></input>
                 <button id="photoButton" onclick="document.getElementById('imageUpload').click(); return false;">

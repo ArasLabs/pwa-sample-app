@@ -26,6 +26,8 @@ function initialize() {
         }
     };
 
+    initLocationService();
+
     // Checking if there is local storage
     if (window.localStorage) {
         database = window.localStorage.getItem("database");
@@ -211,17 +213,19 @@ function getImage() {
  * Get's the user's location and logs it to the console
  */
 function getLocation() {
-    var location = null;
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            location = "Latitude: " + position.coords.latitude +
-                " - Longitude: " + position.coords.longitude;
-        });
-    } else {
-        console.error = "Geolocation is not supported by this browser.";
-    };
-
-    return location;
+    return new Promise(function (resolve) {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(resolve, resolve);
+        } else {
+            console.error("Geolocation is not supported by this browser.");
+            resolve(null);
+        };
+    }).then(function (position) {
+        if (position !== null && position !== undefined && position.code !== 1) {
+            return position.coords.latitude + "," + position.coords.longitude;
+        }
+        return null;
+    });
 }
 
 /**
@@ -235,7 +239,7 @@ function submitReport() {
     var title = document.getElementById("title").value;
     var description = document.getElementById("description").value;
     var problemDate = document.getElementById("problemDate").value;
-    var location = getLocation();
+    var location = document.getElementById("location").value;
     var image = getImage();
 
     return new Promise(function (resolve, reject) {
@@ -272,7 +276,7 @@ function submitReport() {
         }
 
         if (location !== null) {
-            body["location"] = loc;
+            body["location"] = location;
         }
 
         body = JSON.stringify(body);
@@ -439,6 +443,14 @@ function showUserReports() {
             card.appendChild(document.createTextNode(problemReport.title));
             card.appendChild(document.createElement("br"));
 
+            if (problemReport.location !== undefined && problemReport.location !== null && problemReport.location.length !== 0) {
+                var locationLink = document.createElement("a");
+                locationLink.innerText = problemReport.location;
+                locationLink.setAttribute("href", generateLocationLink(problemReport.location));
+                locationLink.setAttribute("target", "_blank");
+                card.appendChild(locationLink);
+            }
+
             styleNode = document.createElement("div");
             textNode = document.createTextNode(problemReport.state);
             styleNode.appendChild(textNode);
@@ -496,4 +508,38 @@ function generateNewGuid() {
     }
     var crypto = window.crypto || window.msCrypto;
     return 'xxxxxxxxxxxx4xxx8xxxxxxxxxxxxxxx'.replace(/x/g, randomDigit).toUpperCase();
+}
+
+function generateLocationLink(location) {
+    const googleMapsEmbedLink = "https://maps.google.com/maps?t=&ie=UTF8&iwloc=";
+
+    if (location === null || location === undefined || location.length == 0) {
+        return googleMapsEmbedLink;
+    }
+
+    return googleMapsEmbedLink + "&q=" + encodeURI(location);
+}
+
+function generateEmbedLocationLink(location) {
+    return generateLocationLink(location) + "&output=embed";
+}
+
+
+function updateLocation() {
+    var mapFrame = document.getElementById("gmap");
+    var location = document.getElementById('location').value;
+    var src = generateEmbedLocationLink(location);
+    mapFrame.setAttribute("src", src);
+}
+
+
+function initLocationService() {
+    var locationInputElement = document.getElementById('location');
+    locationInputElement.addEventListener("input", updateLocation);
+    locationInputElement.addEventListener("change", updateLocation);
+    getLocation().then(function (coordinates) {
+        //TODO convert coordinates to address using google api. 
+        locationInputElement.value = encodeURI(coordinates);
+        updateLocation();
+    })
 }
