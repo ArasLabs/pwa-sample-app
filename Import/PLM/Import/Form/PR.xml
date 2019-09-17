@@ -1,0 +1,75 @@
+﻿<AML>
+ <Item type="Form" id="BECC5C22100641F2A96F2AFB8155A380" action="add">
+  <category_form>0</category_form>
+  <description>Problem Report</description>
+  <height>399</height>
+  <stylesheet><![CDATA[../styles/default.css]]></stylesheet>
+  <width>834</width>
+  <name>PR</name>
+  <Relationships>
+   <Item type="Body" id="12D89FDBF0EA46E9AEF77DD43DC64BE4" action="add">
+    <bg_color>#FFFFFF</bg_color>
+    <sort_order>128</sort_order>
+    <source_id keyed_name="PR" type="Form">BECC5C22100641F2A96F2AFB8155A380</source_id>
+    <Relationships>
+     <Item type="Field" id="21E52DBE2E914A3A8BCFC75AA3922EDF" action="add">
+      <border_width>0</border_width>
+      <display_length_unit>px</display_length_unit>
+      <field_type>textarea</field_type>
+      <font_color>#000000</font_color>
+      <font_family>arial, helvetica, sans-serif</font_family>
+      <font_size>8pt</font_size>
+      <font_weight>bold</font_weight>
+      <is_disabled>0</is_disabled>
+      <is_visible>0</is_visible>
+      <label xml:lang="en">Location</label>
+      <label_position>top</label_position>
+      <list_no_blank>0</list_no_blank>
+      <propertytype_id keyed_name="location" type="Property">6CBCF2DCDCCD4E999C8EB7698961FF59</propertytype_id>
+      <sort_order>2944</sort_order>
+      <source_id keyed_name="12D89FDBF0EA46E9AEF77DD43DC64BE4" type="Body">12D89FDBF0EA46E9AEF77DD43DC64BE4</source_id>
+      <tab_index>5760</tab_index>
+      <tab_stop>1</tab_stop>
+      <x>661</x>
+      <y>10</y>
+      <name>location</name>
+     </Item>
+     <Item type="Field" id="97AFFF73D3734C4BAD455E72278C5AA8" action="add">
+      <border_width>0</border_width>
+      <display_length_unit>px</display_length_unit>
+      <field_type>html</field_type>
+      <font_color>#000000</font_color>
+      <font_family>arial, helvetica, sans-serif</font_family>
+      <font_size>8pt</font_size>
+      <font_weight>bold</font_weight>
+      <html_code><![CDATA[<link href=../javascript/MapboxGL/mapbox-gl.css' rel='stylesheet' />
+<div id='map' style='width: 400px; height: 300px;'></div>
+<address id='map-caption'></address>
+]]></html_code>
+      <is_disabled>0</is_disabled>
+      <is_visible>1</is_visible>
+      <label xml:lang="en">Location</label>
+      <label_position>top</label_position>
+      <list_no_blank>0</list_no_blank>
+      <sort_order>3072</sort_order>
+      <source_id keyed_name="12D89FDBF0EA46E9AEF77DD43DC64BE4" type="Body">12D89FDBF0EA46E9AEF77DD43DC64BE4</source_id>
+      <tab_stop>1</tab_stop>
+      <x>661</x>
+      <y>10</y>
+      <name>map</name>
+     </Item>
+    </Relationships>
+   </Item>
+   <Item type="Form Event" id="379D5C84FB8F49268DAA082375E4A7F1" action="add">
+    <form_event>onformpopulated</form_event>
+    <related_id keyed_name="labs_LoadLocationMap" type="Method">
+     <Item type="Method" action="get" select="id">
+      <name>labs_LoadLocationMap</name>
+     </Item>
+    </related_id>
+    <sort_order>256</sort_order>
+    <source_id keyed_name="PR" type="Form">BECC5C22100641F2A96F2AFB8155A380</source_id>
+   </Item>
+  </Relationships>
+ </Item>
+</AML>
