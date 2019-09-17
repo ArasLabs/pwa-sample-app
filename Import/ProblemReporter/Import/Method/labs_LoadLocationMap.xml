@@ -1,0 +1,80 @@
+﻿<AML>
+ <Item type="Method" id="3430BDA56E3645ADABCE513F7C5F6BDD" action="add">
+  <execution_allowed_to keyed_name="World" type="Identity">A73B655731924CD0B027E4F4D5FCC0A9</execution_allowed_to>
+  <method_code><![CDATA[require([
+    "../javascript/MapboxGL/mapbox-gl.js"
+], function(
+    mapboxgl
+) {
+    // get the map container element
+    let mapContainer = document.getElementById("map");
+    
+    // get location from PR - if no location, we can hide the map
+    let locationString = document.thisItem.getProperty("location","");
+    if (locationString === "") {
+        mapContainer.style.display = "none";
+        return;
+    } else {
+        mapContainer.style.display = "block";
+    }
+    
+    let coordinates = locationString.split(',');
+    let latitude = coordinates[0];
+    let longitude = coordinates[1];
+    
+    // set caption on map - that way location is displayed regardless of whether map works
+    let mapCaption = document.getElementById("map-caption");
+    let captionHtml = "<strong>Latitude:</strong> " + latitude + " <strong>Longitude:</strong> " + longitude;
+    mapCaption.innerHTML = captionHtml;
+    
+    // get token from Variable
+    let tokenVariable = aras.newIOMItem("Variable","get");
+    tokenVariable.setProperty("name","labs_MapToken");
+    tokenVariable = tokenVariable.apply();
+    
+    let token = tokenVariable.getProperty("value","");
+    if (token === "") {
+        return alert("Bad token variable");
+    }
+    
+    mapboxgl.accessToken = token;
+    
+    // initialize map
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11'
+    });
+    
+    // create load function to place location marker
+    map.on('load', function() {
+        map.loadImage('../javascript/MapboxGL/mapbox-icon.png', function(error, image) {
+            if (error) throw error;
+            map.addImage('pointer', image);
+            map.addLayer({
+                "id": "points",
+                "type": "symbol",
+                "source": {
+                    "type": "geojson",
+                    "data": {
+                        "type": "FeatureCollection",
+                        "features": [{
+                            "type": "Feature",
+                            "geometry": {
+                                "type": "Point",
+                                "coordinates": [longitude, latitude]
+                            }
+                        }]
+                    }
+                },
+                "layout": {
+                    "icon-image": "pointer",
+                    "icon-size": 0.25
+                }
+            });
+        });
+    });
+});]]></method_code>
+  <method_type>JavaScript</method_type>
+  <name>labs_LoadLocationMap</name>
+ </Item>
+</AML>
