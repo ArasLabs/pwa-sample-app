@@ -15,7 +15,7 @@ This project contains a sample Progressive Web App (PWA) that connects to Aras I
 
 ### Pre-requisites
 
-1. Aras Innovator installed (version 11.0 SP15)
+1. Aras Innovator installed (version 12.0 SP0)
 
 >Note: Progressive Web Apps require HTTPS to be enabled to take full advantage of certain native controls, like location services. You can use this application with an Innovator instance that doesn't have HTTPS enabled, but some PWA features might not work as expected.
 
@@ -29,6 +29,23 @@ This project contains a sample Progressive Web App (PWA) that connects to Aras I
 6. In the **Physical path** field, select the location of the downloaded pwa-sample-app project. 
 7. Click **Ok** to close the Add Application dialog. 
 8. Restart IIS.
+9. Open "Package Import Utility" (you can download it here https://www.aras.com/support/downloads/ also, you can skip step 9-10 but if you do it than Location data will not work in the application)
+10. Connect to server and import ProblemReporter package from AML-packages folder from step 1
+11. Go to the location of the installed Innovator instance and open OAuth.config file in OAuthServer folder ("{ARAS_INSTANCE}\OAuthServer\OAuth.config")  
+12. Find "clientRegistries" section in the config file and put following configuration inside this section:
+
+``` xml
+<clientRegistry id="ProblemReporter" enabled="true">
+    <allowedScopes>
+        <scope name="Innovator"></scope>
+        <scope name="offline_access"></scope>
+    </allowedScopes>
+    <allowedGrantTypes>
+        <grantType name="password"></grantType>
+    </allowedGrantTypes>
+    <tokenLifetime accessTokenLifetime="3600" authorizationCodeLifetime="300" refreshTokenSlidingLifetime="36000" refreshTokenOneTimeOnly="true" refreshTokenAbsoluteExpiration="false"></tokenLifetime>
+</clientRegistry>
+```
 
 This application does not require any imports to the Innovator database.
 
