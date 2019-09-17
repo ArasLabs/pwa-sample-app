@@ -1,0 +1,6 @@
+<imports>
+  <package name="ProblemReporter" path="ProblemReporter\Import" />
+  <package name="com.aras.innovator.solution.PLM" path="PLM\Import">
+    <dependson name="com.aras.innovator.solution.ApplicationCore" />
+  </package>
+</imports>
