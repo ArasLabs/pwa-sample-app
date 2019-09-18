@@ -103,7 +103,7 @@ For more information on contributing to this project, another Aras Labs project,
 
 ## Credits
 
-Created by Andrew Johnson, Chris Gillis, and Eli Donahue for Aras Labs.
+Created by Andrew Johnson, Chris Gillis, Eli Donahue, and Ivan Bidolakh for Aras Labs.
 
 
 ## License
