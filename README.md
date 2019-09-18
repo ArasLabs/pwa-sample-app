@@ -15,39 +15,65 @@ This project contains a sample Progressive Web App (PWA) that connects to Aras I
 
 ### Pre-requisites
 
-1. Aras Innovator installed (version 12.0 SP0)
+1. Aras Innovator installed (version 12.0+)
+2. Aras Package Import Utility - *optional*
+3. PWA-sample-app import package - *optional*
+4. Code Tree overlay - *optional*
 
 >Note: Progressive Web Apps require HTTPS to be enabled to take full advantage of certain native controls, like location services. You can use this application with an Innovator instance that doesn't have HTTPS enabled, but some PWA features might not work as expected.
 
-### Install Steps
-
+### Install the Application
 1. Download or clone the pwa-sample-app to the Innovator server. 
-2. Open the IIS manager on the server.
-3. Expand the tree in the connection pane down to the web application for your Innovator instance: **{server} > Sites > Default Web Site > {web alias}**
+2. Open the IIS manager on the server. 
+3. Expand the tree in the connection pane down to the web application for your Innovator instance: **{server} > Sites > Default Web Site > {web alias}** <!-- TODO: Add screenshot -->
 4. Right click on the web application for your Innovator instance (label matches your web alias) and select **Add application**.
 5. In the Add Application dialog, enter "ProblemReporter" in the **Alias** field. This will be the name of the application in the url.
 6. In the **Physical path** field, select the location of the downloaded pwa-sample-app project. 
 7. Click **Ok** to close the Add Application dialog. 
 8. Restart IIS.
-9. Open "Package Import Utility" (you can download it here https://www.aras.com/support/downloads/ also, you can skip step 9-10 but if you do it than Location data will not work in the application)
-10. Connect to server and import ProblemReporter package from AML-packages folder from step 1
-11. Go to the location of the installed Innovator instance and open OAuth.config file in OAuthServer folder ("{ARAS_INSTANCE}\OAuthServer\OAuth.config")  
-12. Find "clientRegistries" section in the config file and put following configuration inside this section:
 
-``` xml
-<clientRegistry id="ProblemReporter" enabled="true">
-    <allowedScopes>
-        <scope name="Innovator"></scope>
-        <scope name="offline_access"></scope>
-    </allowedScopes>
-    <allowedGrantTypes>
-        <grantType name="password"></grantType>
-    </allowedGrantTypes>
-    <tokenLifetime accessTokenLifetime="3600" authorizationCodeLifetime="300" refreshTokenSlidingLifetime="36000" refreshTokenOneTimeOnly="true" refreshTokenAbsoluteExpiration="false"></tokenLifetime>
-</clientRegistry>
-```
+### Configure the Client Registry
+1. On the server, navigate to `{install_path}\OAuthServer\OAuth.config` where `{install_path}` is the path to your Aras Innovator installation. 
+    * The default path suggested by the Aras Innovator installer is `C:\Program Files (x86)\Aras\Innovator`.
+2. Find `<clientRegistries>` tag in the config file and put following configuration inside this section:
+    ``` xml
+    <clientRegistry id="ProblemReporter" enabled="true">
+        <allowedScopes>
+            <scope name="Innovator"></scope>
+            <scope name="offline_access"></scope>
+        </allowedScopes>
+        <allowedGrantTypes>
+            <grantType name="password"></grantType>
+        </allowedGrantTypes>
+        <tokenLifetime accessTokenLifetime="3600" authorizationCodeLifetime="300" refreshTokenSlidingLifetime="36000" refreshTokenOneTimeOnly="true" refreshTokenAbsoluteExpiration="false"></tokenLifetime>
+    </clientRegistry>
+    ```
+3. Save and close the OAuth.config file.
 
-This application does not require any imports to the Innovator database.
+### Optional: Install the Location Feature
+One of the many advantages of PWAs is that they provide access to device services and APIs that are usually limited to native applications. To demonstrate how you can use location services, we've implemented a feature that lets users select a location for their problem report in the PWA and view the location in a map on the PR form in Aras. 
+
+This feature is optional. The PWA will still work if you skip these setup steps - you just won't see the location map in your Aras PR form.
+
+#### The Code Tree
+1. Backup your code tree and store the backup in a safe place.
+2. Copy the `/Innovator/` folder in your local repository.
+3. Paste this folder to the root of your code tree.
+    * This should be the same folder that contains the `InnovatorServerConfig.xml` file.
+
+#### The Database
+1. Backup your database and store the BAK file in a safe place.
+2. Open up the Aras Package Import tool
+3. Enter your login credentials and click Login
+    * _Note: You must login as root for the package import to succeed!_
+4. Enter the package name in the TargetRelease field
+5. Enter the path to your local ..\pwa-sample-app\Import\imports.mf file in the Manifest File field
+6. Select **ProblemReporter** and **com.aras.innovator.solution.PLM** in the Available for Import field
+7. Select Type = Merge and Mode = Thorough Mode
+8. Click Import in the top left corner
+9. Close the Aras Package Import tool
+
+The PWA sample app is now ready to use.
 
 ## Usage
 
