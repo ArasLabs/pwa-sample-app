@@ -55,13 +55,13 @@ One of the many advantages of PWAs is that they provide access to device service
 
 This feature is optional. The PWA will still work if you skip these setup steps - you just won't see the location map in your Aras PR form.
 
-#### The Code Tree
+#### Code Tree
 1. Backup your code tree and store the backup in a safe place.
 2. Copy the `/Innovator/` folder in your local repository.
 3. Paste this folder to the root of your code tree.
     * This should be the same folder that contains the `InnovatorServerConfig.xml` file.
 
-#### The Database
+#### Database
 1. Backup your database and store the BAK file in a safe place.
 2. Open up the Aras Package Import tool
 3. Enter your login credentials and click Login
@@ -72,6 +72,18 @@ This feature is optional. The PWA will still work if you skip these setup steps 
 7. Select Type = Merge and Mode = Thorough Mode
 8. Click Import in the top left corner
 9. Close the Aras Package Import tool
+
+#### Mapbox API Key
+We used a JavaScript library called [Mapbox](https://www.mapbox.com/) to display the location data as a map on the Aras PR form. To use this feature, you'll need to sign up for a Mapbox account and request an API key. Mapbox is a paid service, however they include a generous free tier and they don't require your billing information to start using the service. 
+
+1. [Sign up for a free Mapbox account.](https://account.mapbox.com/auth/signup/)
+2. Once you're signed up, go to your [account page](https://account.mapbox.com/). Scroll down to the Access Tokens section and copy your token.
+3. Login to Innovator as admin.
+4. Navigate to **Administration > Variables** in the TOC.
+5. Open the labs_MapToken Variable and paste your token in the value field.
+6. Save and close the labs_MapToken item.
+
+>If you don't want to use Mapbox, you can use our implementation as an example of how to implement the location/map service of your choice. Just update the HTML in the "map" field on the PR form and edit the labs_LoadLocationMap Method with the logic for your preferred library. 
 
 The PWA sample app is now ready to use.
 
