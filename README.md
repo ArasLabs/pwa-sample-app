@@ -51,7 +51,9 @@ This project contains a sample Progressive Web App (PWA) that connects to Aras I
 3. Save and close the OAuth.config file.
 
 ### Optional: Install the Location Feature
-One of the many advantages of PWAs is that they provide access to device services and APIs that are usually limited to native applications. To demonstrate how you can use location services, we've implemented a feature that lets users select a location for their problem report in the PWA and view the location in a map on the PR form in Aras. 
+One of the many advantages of PWAs is that they provide access to device services and APIs that are usually limited to native applications. To demonstrate how you can use location services, we've implemented a feature that lets users incluse a location with their problem report in the PWA and view the location in a map on the PR form in Aras. 
+
+![location in Innovator form](./Screenshots/pr-in-innovator.png)
 
 This feature is optional. The PWA will still work if you skip these setup steps - you just won't see the location map in your Aras PR form.
 
@@ -92,15 +94,18 @@ The PWA sample app is now ready to use.
 1. In your browser, enter the url for the Problem Reporter app. This should be your Innovator url, plus the string we configured in step 5 above: `https://{server}/{Innovator alias}/ProblemReporter`
 2. Login to the problem reporter app using your Innovator credentials. You can check off "Remember me" if you'd like to cache your credentials.
 
-    ![login screen](./Screenshots/login.png)
+    ![login screen](./Screenshots/pwa-login.png)
 
 3. On the problem report form, enter the name and description for your problem. 
 4. If you would like to submit an image with your PR, click the camera icon to select an image file or take a new photo, depending on your device and browser support.
 
-    ![problem report form](./Screenshots/form.png)
+    ![problem report form](./Screenshots/installed-pwa.png)
 
 5. Click the **Submit Problem Report** button to send the report to Innovator and create a new PR item.
+6. To view the problem report in Innovator, login to your Innovator instance and search for the PR under **Change Management > PRs** in the TOC.
 
+    ![location in Innovator form](./Screenshots/pr-in-innovator.png)
+    
 
 ## Contributing
 
