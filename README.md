@@ -22,7 +22,7 @@ This project contains a sample Progressive Web App (PWA) that connects to Aras I
 
 >Note: Progressive Web Apps require HTTPS to be enabled to take full advantage of certain native controls, like location services. You can use this application with an Innovator instance that doesn't have HTTPS enabled, but some PWA features might not work as expected.
 
-### Install the Application
+### Configure IIS
 1. Download or clone the pwa-sample-app to the Innovator server. 
 2. Open the IIS manager on the server. 
 3. Expand the tree in the connection pane down to the web application for your Innovator instance: **{server} > Sites > Default Web Site > {web alias}** <!-- TODO: Add screenshot -->
@@ -87,7 +87,23 @@ We used a JavaScript library called [Mapbox](https://www.mapbox.com/) to display
 
 >If you don't want to use Mapbox, you can use our implementation as an example of how to implement the location/map service of your choice. Just update the HTML in the "map" field on the PR form and edit the labs_LoadLocationMap Method with the logic for your preferred library. 
 
-The PWA sample app is now ready to use.
+### Optional: Install the PWA on Your Device
+One of the neat benefits of using a PWA is that you can "install" the app on your device, providing an experience similar to a native application. Once the app is installed on your device you can view the PWA in its own window and pin it to your desktop or taskbar.
+
+![Problem Reporter in browser vs installed](./Screenshots/browser-vs-installed.png)
+*Side by side comparison of the Problem Reporter app running in a browser (left) vs. running as an installed app (right).*
+
+>Different platforms and browsers have adopted PWA features at different rates. Some are more comprehensive than others. Your device or browser may not support this feature.
+
+Here's how you install a PWA on a Windows device using Google Chrome.
+
+1. In your browser, enter the url for the Problem Reporter app.
+2. In the address bar, you should see an option to install the Problem Reporter app. The action is also accessible in the main menu on the right.
+    ![install the pwa](./Screenshots/install-action.png)
+3. Once you've clicked the install action, Chrome will ask you to confirm that you want to install the app.
+    ![confirmation dialog](./Screenshots/install-app-dialog.png)
+4. After you confirm that you want to install the app, the PWA will open in a new window.
+
 
 ## Usage
 
@@ -105,7 +121,7 @@ The PWA sample app is now ready to use.
 6. To view the problem report in Innovator, login to your Innovator instance and search for the PR under **Change Management > PRs** in the TOC.
 
     ![location in Innovator form](./Screenshots/pr-in-innovator.png)
-    
+
 
 ## Contributing
 
