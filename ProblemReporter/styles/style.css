@@ -48,7 +48,7 @@ body {
 }
 
 .header {
-  background-color: #3F51B5;
+  background-color:grey;
   color: white;
   width: 100%;
   height: 56px;
@@ -201,7 +201,7 @@ select:invalid {
 }
 
 button {
-  background-color: #3F51B5;
+  background-color:grey;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -240,7 +240,7 @@ img.avatar {
 }
 
 .container {
-  padding: 16px;
+  padding: 60px;
 }
 
 span.psw {
@@ -267,7 +267,7 @@ span.psw {
 /* Modal Content/Box */
 .modal-content {
 
-  background-color: #fefefe;
+  background-color: white;
   position: absolute;
   top: 13%;
   left: 10%;
