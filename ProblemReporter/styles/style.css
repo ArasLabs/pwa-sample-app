@@ -201,7 +201,7 @@ select:invalid {
 }
 
 button {
-  background-color:grey;
+  background-color: grey;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -240,8 +240,74 @@ img.avatar {
 }
 
 .container {
-  padding: 60px;
+  padding: 25px;
+  max-width: 100%;
 }
+
+/* From this link: https://product.hubspot.com/blog/how-to-build-a-sleek-animated-input-form-with-css */
+
+form {
+  text-align: center;
+}
+
+.labelTransitions {
+  display: block;
+  letter-spacing: 4px;
+  padding-top: 30px;
+  text-align: center;
+}
+
+.labelTransitions .label-text {
+  color: #9B9B9B;
+  cursor: text;
+  font-size: 20px;
+  line-height: 20px;
+  text-transform: uppercase;
+  -moz-transform: translateY(-45px);
+  -ms-transform: translateY(-45px);
+  -webkit-transform: translateY(-45px);
+  transform: translateY(-45px);
+  transition: all 0.4s;
+}
+
+.labelTransitions input {
+  background-color: transparent;
+  border: 0;
+  border-bottom: 2px solid #4A4A4A;
+  color: darkslategrey;
+  font-size: 36px;
+  letter-spacing: -1px;
+  outline: 0;
+  padding: 5px 20px;
+  text-align: center;
+  transition: all 0.4s;
+  width: 200px;
+}
+
+.labelTransitions input:focus {
+  max-width: 100%;
+  width: fit-content;
+  /* width: 400%; */
+}
+
+.labelTransitions input:focus + .label-text {
+  color: #F0F0F0;
+  font-size: 13px;
+  -moz-transform: translateY(-90px);
+  -ms-transform: translateY(-90px);
+  -webkit-transform: translateY(-90px);
+  transform: translateY(-90px);
+}
+
+.labelTransitions input:valid + .label-text {
+  font-size: 13px;
+  -moz-transform: translateY(-74px);
+  -ms-transform: translateY(-74px);
+  -webkit-transform: translateY(-74px);
+  transform: translateY(-74px);
+}
+
+/* Check up until this point" */
 
 span.psw {
   float: right;
@@ -266,13 +332,12 @@ span.psw {
 
 /* Modal Content/Box */
 .modal-content {
-
   background-color: white;
   position: absolute;
-  top: 13%;
-  left: 10%;
+  top: 20%;
+  left: 36%;
   border: 1px solid #888;
-  width: 80%;
+  width: 25%;
   /* height: 90% */
 }
 

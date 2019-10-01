@@ -49,51 +49,58 @@
     <main class="main" id="main">
         <div id="loginDialog" class="modal">
             <form class="modal-content animate" onsubmit="return loginFromUI();">
-                <div class="imgcontainer">
+                <!-- <div class="imgcontainer">
                     <img src="images/avatar.png" alt="Avatar" class="avatar">
-                </div>
+                </div> -->
 
                 <div class="container">
-                    <label for="database"><b>Database</b></label>
-                    <select name="database" id="database" required>
-                        <option value="" disabled selected>Database Name</option>
-                    </select>
-
-                    <label for="username"><b>Username</b></label>
-                    <input type="text" id="username" placeholder="Enter Username" name="username"
-                        autocomplete="username" required>
-
-                    <label for="password"><b>Password</b></label>
-                    <input type="password" id="password" placeholder="Enter Password" name="password"
-                        autocomplete="current-password" required>
-
-                    <label>
-                        <input type="checkbox" id="rememberMe" name="rememberMe" checked="checked"> Remember me
+                    <label for="database">
+                        <select name="database" id="database" required>
+                            <option value="" disabled selected>Database Name</option>
+                        </select>
                     </label>
 
+                    <label for="username" class="labelTransitions">
+                        <input type="text" id="username" placeholder="" name="username"
+                            autocomplete="username" required>
+                        <div class="label-text">Username</div>
+                    </label>
+
+                    <label for="password" class="labelTransitions">
+                        <input type="password" id="password" placeholder="" name="password"
+                            autocomplete="current-password" required>
+                        <div class="label-text">Password</div>
+                    </label>
+
+                    <input type="checkbox" id="rememberMe" name="rememberMe" checked="checked"> Remember me
+                    
                     <button type="submit">Login</button>
                 </div>
             </form>
         </div>
         <div id="newReportModule" class="modules">
             <form>
-                <label for="title"><b>Title</b></label>
-                <input id="title" name="title" class="inputText" type="text" placeholder="Problem Summary"></input>
+                <label for="title">
+                    <input id="title" name="title" class="inputText" type="text" placeholder="Problem Summary"></input>
+                </label>
 
-                <label for="problemDate"><b>Date</b></label>
-                <input type="date" id="problemDate" name="problemDate" value="">
+                <label for="problemDate">
+                    <input type="date" id="problemDate" name="problemDate" value="">
+                </label>
 
-                <label for="location"><b>Location</b></label>
+                <label for="location">
                 <input type="text" id="location" name="location" maxlength="128"
                     placeholder="Enter your Address"></input>
+                </label>
                 <iframe width="100%" style="min-height: 300px" id="gmap"
                     src="https://maps.google.com/maps?t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"
                     scrolling="no"></iframe>
 
 
 
-                <label for="description"><b>Description</b></label>
-                <textarea id="description" placeholder="Describe the problem"></textarea>
+                <label for="description">
+                    <textarea id="description" placeholder="Describe the problem"></textarea>
+                </label>
 
                 <input type="file" id="imageUpload" onchange="getImage();" accept="image/*"></input>
                 <button id="photoButton" onclick="document.getElementById('imageUpload').click(); return false;">
