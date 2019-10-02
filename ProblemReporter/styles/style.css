@@ -247,7 +247,7 @@ img.avatar {
   padding: 10px;
   min-width: 400px;
   background: white;
-  border-radius: 25px 25px 25px 25px;
+  border-radius: 25px;
 }
 
 /* From this link: https://product.hubspot.com/blog/how-to-build-a-sleek-animated-input-form-with-css */
@@ -340,7 +340,14 @@ span.psw {
 /* Modal Content/Box */
 .modal-content {
   background-color: white;
-  position: absolute;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: inherit;
+  border-radius: 25px;
+
+  /* position: absolute;
   width: 0px;
   height: 300px;
   left: 50%;
@@ -348,7 +355,7 @@ span.psw {
   margin-left: -150px;
   margin-right: -150px;
   margin-top: -150px;
-  margin-bottom: 300px;
+  margin-bottom: 300px; */
 }
 
 /* Add Zoom Animation */
