@@ -201,12 +201,16 @@ select:invalid {
 }
 
 button {
-  background-color: grey;
+  background-color: #333333;
+  border: 2px solid white;
+  border-radius: 27px;
   color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
   cursor: pointer;
+  font-size: 20px;
+  margin-top: 20px;
+  padding: 15px 30px;
+  text-transform: uppercase;
+  transition: all 200ms;
   width: 100%;
 }
 
@@ -240,8 +244,10 @@ img.avatar {
 }
 
 .container {
-  padding: 25px;
-  max-width: 100%;
+  padding: 10px;
+  min-width: 400px;
+  background: white;
+  border-radius: 25px 25px 25px 25px;
 }
 
 /* From this link: https://product.hubspot.com/blog/how-to-build-a-sleek-animated-input-form-with-css */
@@ -274,7 +280,7 @@ form {
   background-color: transparent;
   border: 0;
   border-bottom: 2px solid #4A4A4A;
-  color: darkslategrey;
+  color: dimgray;
   font-size: 36px;
   letter-spacing: -1px;
   outline: 0;
@@ -288,6 +294,7 @@ form {
   max-width: 100%;
   width: fit-content;
   /* width: 400%; */
+  min-width: 50px;
 }
 
 .labelTransitions input:focus + .label-text {
@@ -334,11 +341,14 @@ span.psw {
 .modal-content {
   background-color: white;
   position: absolute;
-  top: 20%;
-  left: 36%;
-  border: 1px solid #888;
-  width: 25%;
-  /* height: 90% */
+  width: 0px;
+  height: 300px;
+  left: 50%;
+  top: 40%;
+  margin-left: -150px;
+  margin-right: -150px;
+  margin-top: -150px;
+  margin-bottom: 300px;
 }
 
 /* Add Zoom Animation */
