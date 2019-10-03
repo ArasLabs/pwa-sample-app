@@ -66,6 +66,7 @@ function closeNav() {
  */
 function populateDatabaseList(databaseList) {
     let databaseField = document.getElementById("database");
+    while(databaseField.firstChild) { databaseField.removeChild(databaseField.firstChild);}
     let databases = getXMLElementsFromXmlHttpResponse(databaseList, "DB");
 
     // if the url is a valid innovator instance, add the databases to the dropdown
