@@ -181,14 +181,13 @@ select,
 #problemDate {
   width: 100%;
   padding: 12px 20px;
-  margin: 8px 0;
+  margin: 10px 0px;
   display: inline-block;
-  border: 1px solid #ccc;
+  border: 0px solid white;
   box-sizing: border-box;
   font-family: 'Helvetica',
     'Verdana',
     sans-serif;
-
 }
 
 option[value=""]:disabled {
@@ -245,7 +244,7 @@ img.avatar {
 
 .container {
   padding: 10px;
-  min-width: 400px;
+  min-width: 250px;
   background: white;
   border-radius: 25px;
 }
@@ -259,7 +258,7 @@ form {
 .labelTransitions {
   display: block;
   letter-spacing: 4px;
-  padding-top: 30px;
+  padding-top: 15px;
   text-align: center;
 }
 
@@ -280,14 +279,19 @@ form {
   background-color: transparent;
   border: 0;
   border-bottom: 2px solid #4A4A4A;
+  margin-bottom: 5px;
   color: dimgray;
-  font-size: 36px;
+  font-size: 25px;
   letter-spacing: -1px;
   outline: 0;
   padding: 5px 20px;
   text-align: center;
   transition: all 0.4s;
   width: 200px;
+}
+
+#username {
+  margin-top: 33px;
 }
 
 .labelTransitions input:focus {
@@ -315,6 +319,30 @@ form {
 }
 
 /* Check up until this point" */
+
+.dropdown select{
+  background: white;
+  /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); */
+  /* -webkit-appearance: button; */
+  /* outline: none; */
+}
+
+/* select:hover{
+  color: white;
+  background: #2bbbad;
+} */
+
+/* .select2-results__option--highlighted {
+  background-color: #2bbbad !important;
+} */
+
+.select2-results__option--highlighted { 
+  background-color: #2bbbad !important;
+}
+
+.select2 {
+  width: 100% !important;
+}
 
 span.psw {
   float: right;
