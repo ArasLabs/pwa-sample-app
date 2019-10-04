@@ -44,7 +44,7 @@ body {
   -webkit-align-content: stretch;
   -ms-flex-line-pack: stretch;
   align-content: stretch;
-  background: #ececec;
+  background: #EDF5E1;
 }
 
 .header {
@@ -76,26 +76,10 @@ body {
   padding: 0;
 }
 
-/* .header {
-  height: 100%;
-  width: 20px;
-  margin-top: 0;
-  margin-left: 15px;
-  margin-right: 10px;
-  color: white;
-  font-size: 25px;
-  padding: 0;
-} */
-
 .header .navButton:hover {
   background-color: darkgrey;
   color: black;
 }
-
-/* .header {
-  background-color: darkgrey;
-  color: black;
-} */
 
 .loader {
   left: 50%;
@@ -522,7 +506,7 @@ h1 {
   margin-bottom: 50px;
 }
 
-a, .sideNavScheme {
+.onlySideNavDrop, .sideNavScheme {
   color: white;
   text-decoration: none;
   background-color: #2bbbad;
@@ -531,11 +515,11 @@ a, .sideNavScheme {
 .dropMenu {
   position: absolute;
   right: -165px;
-  top: 2em;
+  top: 1.1em;
   transition: all 0.25s ease-out;
   transform: scale(0);
   transform-origin: 100% 0;
-  box-shadow: 0 5px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 8px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.16), 0 20px 8px 0 rgba(0, 0, 0, 0.12);
 }
 
 .dropMenu li {
@@ -543,7 +527,7 @@ a, .sideNavScheme {
   width: 100%;
 }
 
-.dropMenu li a {
+.dropMenu li .onlySideNavDrop {
   width: 100%;
   padding: 1em 24px;
   display: inline-block;
@@ -551,7 +535,7 @@ a, .sideNavScheme {
   box-sizing: border-box;
 }
 
-.dropMenu li a:hover {
+.dropMenu li .onlySideNavDrop:hover {
   background: #05386B;
   box-shadow: 0 8px 17px 0 rgba(0,0,0,.2), 0 6px 20px 0 rgba(0,0,0,.19);
   margin: 3px;
