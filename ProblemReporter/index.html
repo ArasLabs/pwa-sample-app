@@ -25,23 +25,55 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+
+    <!-- These are the kebab menu feature links: -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Nunito:400,700,300' rel='stylesheet' type='text/css'>
 </head>
 
 <body onload="initialize()">
 
+
+    <div class="kebab">
+       <figure></figure>
+       <figure class="middle"></figure>
+            <p class="cross">x</p>
+        <figure></figure>
+        <ul class="dropMenu sideNavScheme">
+            <li class="sideNavScheme"><a onclick="showModule('newReportModule')" href="#">Create New Report</a></li>
+            <li class="sideNavScheme"><a onclick="showModule('allReportsModule'); showUserReports();" href="#">Show Open Reports</a></li>
+            <li class="sideNavScheme"><a onclick="signOut()" href="#">Sign Out</a></li>
+        </ul>
+    </div>
+
+
+    <script type="text/javascript">
+        var kebab = document.querySelector('.kebab'),
+        middle = document.querySelector('.middle'),
+        cross = document.querySelector('.cross'),
+        dropdown = document.querySelector('.dropMenu');
+
+        kebab.addEventListener('click', function() {
+            middle.classList.toggle('active');
+            cross.classList.toggle('active');
+            dropdown.classList.toggle('active');
+        })
+    </script>
+
     <header class="header">
-        <button class="navButton" id="navButton" onclick="openNav()" aria-label="Menu">
+        <!-- <button class="navButton" id="navButton" onclick="openNav()" aria-label="Menu">
             <i class="fa fa-bars" id="fa fa-bars"></i>
-        </button>
+        </button> -->
         <h1 class=" header_title">Problem Reporter</h1>
     </header>
 
-    <div id="sideNav" class="sidenav">
+    <!-- <div id="sideNav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a onclick="showModule('newReportModule')" href="#">Create New Report</a>
         <a onclick="showModule('allReportsModule'); showUserReports();" href="#">Show Open Reports</a>
         <a onclick="signOut()" href="#">Sign Out</a>
-    </div>
+    </div> -->
 
     <div id="loader" class="loader">
         <svg viewBox="0 0 32 32" width="32" height="32">
@@ -58,19 +90,17 @@
 
                 <div class="container">
                     
-                    <div class="dropdown">
                         <label for="database">
                             <select class="color" name="database" id="database" required>
                                 <option value="" disabled selected></option>
                             </select>
                         </label>
-                    </div>
 
                     <script type="text/javascript">
                         $(".color").select2({
                             minimumResultsForSearch:-1,
                             tag: false, 
-                            placeholder: "Database"
+                            placeholder: "Database",
                         });
 
                         $('b[role="presentation"]').hide();
