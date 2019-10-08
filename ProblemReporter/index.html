@@ -22,11 +22,21 @@
     <script src="scripts/httpRequestManager.js" async></script>
     <script src="scripts/oauthManager.js" async></script>
     <script src="scripts/app.js" async></script>
+
+    <!-- Select2 Boostrapping links: -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 
-    <!-- These are the kebab menu feature links: -->
+    <!-- MDL Select Dropdown Links:  -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="your_path_to/material-design-lite/material.min.css">
+    <script defer src="your_path_to/material-design-lite/material.min.js"></script>   
+    <!--getmdl-select-->   
+    <link rel="stylesheet" href="path_to/getmdl-select/getmdl-select.min.css">
+    <script defer src="path_to/getmdl-select/getmdl-select.min.js"></script>
+
+    <!-- These are the kebab menu boostrap links: -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,300,700' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Nunito:400,700,300' rel='stylesheet' type='text/css'>
@@ -47,7 +57,7 @@
         </ul>
     </div>
 
-
+    <!-- Script for the kebab menu dropdown replacing the hamburger -->
     <script type="text/javascript">
         var kebab = document.querySelector('.kebab'),
         middle = document.querySelector('.middle'),
@@ -62,18 +72,9 @@
     </script>
 
     <header class="header">
-        <!-- <button class="navButton" id="navButton" onclick="openNav()" aria-label="Menu">
-            <i class="fa fa-bars" id="fa fa-bars"></i>
-        </button> -->
         <h1 class=" header_title">Problem Reporter</h1>
     </header>
 
-    <!-- <div id="sideNav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a onclick="showModule('newReportModule')" href="#">Create New Report</a>
-        <a onclick="showModule('allReportsModule'); showUserReports();" href="#">Show Open Reports</a>
-        <a onclick="signOut()" href="#">Sign Out</a>
-    </div> -->
 
     <div id="loader" class="loader">
         <svg viewBox="0 0 32 32" width="32" height="32">
@@ -84,34 +85,56 @@
     <main class="main" id="main">
         <div id="loginDialog" class="modal">
             <form class="modal-content animate" onsubmit="return loginFromUI();">
-                <!-- <div class="imgcontainer">
-                    <img src="images/avatar.png" alt="Avatar" class="avatar">
-                </div> -->
 
                 <div class="container">
                     
+                    <!-- Rewrite this section to be li/ul instead of select/option -->
+                    <!-- Javascript function is above loginFromUI -->
+                    <!-- After this add in the preferences to choose from other locations on the map -->        
+                    
+
+                    <!-- Need to convert select/option into ul/li to customize -->
+                    <!-- <div class="box">
+                    <label for="database">
+                        <select name="database" id="database" required>
+                            <option class="color" value="" disabled selected></option>
+                        </select>
+                    </label>
+                    </div> -->
+
+                    <!-- <script>
+                       $('select').each(function () {
+                            var $this = $(this),
+                                $list = $('<ul />');
+
+                            $this.find('option').each(function(){
+                                $list.append('<li>' + $(this).text() + '</li>');
+                            });
+
+                        $this.after( $list ).remove();
+                        });
+                    </script> -->
+
+
+
+
+                    <!-- Making changes to this  -->
                         <label for="database">
-                            <select class="color" name="database" id="database" required>
+                            <select class="select2" name="database" id="database" required>
                                 <option value="" disabled selected></option>
                             </select>
                         </label>
-
+                    
+                    <!-- This script is for the database dropdown with select2 -->
                     <script type="text/javascript">
-                        $(".color").select2({
+                        $(".select2").select2({
                             minimumResultsForSearch:-1,
                             tag: false, 
                             placeholder: "Database",
                         });
-
-                        $('b[role="presentation"]').hide();
+                        
+                        // $('b[role="presentation"]').hide();
                     </script>
-
-
-                    <!-- <label for="database">
-                        <select name="database" id="database" required>
-                            <option value="" disabled selected>Database Name</option>
-                        </select>
-                    </label> -->
 
                     <label for="username" class="labelTransitions">
                         <input type="text" id="username" placeholder="" name="username"
@@ -127,7 +150,7 @@
 
                     <input type="checkbox" id="rememberMe" name="rememberMe" checked="checked"> Remember me
                     
-                    <button type="submit">Login</button>
+                    <button class="submitButtonFont" type="submit">Login</button>
                 </div>
             </form>
         </div>
@@ -159,7 +182,7 @@
                 <button id="photoButton" onclick="document.getElementById('imageUpload').click(); return false;">
                 </button>
 
-                <button type="submit" onclick="submitReport(); return false;">Submit Problem Report</button>
+                <button class="smallerButton" type="submit" onclick="submitReport(); return false;">Submit</button>
             </form>
         </div>
         <div id="allReportsModule" class="modules">
