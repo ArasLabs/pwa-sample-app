@@ -28,14 +28,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 
-    <!-- MDL Select Dropdown Links:  -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="your_path_to/material-design-lite/material.min.css">
-    <script defer src="your_path_to/material-design-lite/material.min.js"></script>   
-    <!--getmdl-select-->   
-    <link rel="stylesheet" href="path_to/getmdl-select/getmdl-select.min.css">
-    <script defer src="path_to/getmdl-select/getmdl-select.min.js"></script>
-
     <!-- These are the kebab menu boostrap links: -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,300,700' rel='stylesheet' type='text/css'>
@@ -68,7 +60,7 @@
             middle.classList.toggle('active');
             cross.classList.toggle('active');
             dropdown.classList.toggle('active');
-        })
+        });
     </script>
 
     <header class="header">
@@ -88,9 +80,8 @@
 
                 <div class="container">
                     
-                    <!-- Rewrite this section to be li/ul instead of select/option -->
-                    <!-- Javascript function is above loginFromUI -->
-                    <!-- After this add in the preferences to choose from other locations on the map -->        
+                    <!-- After this add in the preferences to choose from other locations on the map -->   
+                    <!-- Change open reports to have filters -->
                     
 
                     <!-- Need to convert select/option into ul/li to customize -->
@@ -119,15 +110,16 @@
 
 
                     <!-- Making changes to this  -->
-                        <label for="database">
-                            <select class="select2" name="database" id="database" required>
-                                <option value="" disabled selected></option>
-                            </select>
-                        </label>
-                    
+                    <div class="dbCustomCss">
+                    <label for="database">
+                        <select class="select2DB" name="database" id="database" required>
+                            <option value="" disabled selected></option>
+                        </select>
+                    </label>
+                    </div>
                     <!-- This script is for the database dropdown with select2 -->
                     <script type="text/javascript">
-                        $(".select2").select2({
+                        $(".select2DB").select2({
                             minimumResultsForSearch:-1,
                             tag: false, 
                             placeholder: "Database",
@@ -157,21 +149,54 @@
         <div id="newReportModule" class="modules">
             <form>
                 <label for="title">
-                    <input id="title" name="title" class="inputText" type="text" placeholder="Problem Summary"></input>
+                    <input id="title" name="title" class="inputText roundedEdges" type="text" placeholder="Problem Summary"></input>
                 </label>
 
                 <label for="problemDate">
                     <input type="date" id="problemDate" name="problemDate" value="">
                 </label>
 
+                <!-- <label for="location">
+                    <input type="text" list="locationList" id="location" name="location" maxlength="128"></input>
+                    <datalist id="locationList" class="locationPreferences">
+                        <option value="">yes</option>
+                        <option value="">no</option>
+                    </datalist>
+                </label>
+                <iframe width="100%" style="min-height: 300px" id="gmap"
+                    src="https://maps.google.com/maps?t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"
+                    scrolling="no"></iframe> -->
+
+                
                 <label for="location">
-                <input type="text" id="location" name="location" maxlength="128"
-                    placeholder="Enter your Address"></input>
+                    <div class="locationDropCustomCss"><select class="locationPreferences" id="location" name="location" maxlength="128">
+                        <option>yes</option>
+                        <option>testg</option>
+                    </select></div>
                 </label>
                 <iframe width="100%" style="min-height: 300px" id="gmap"
                     src="https://maps.google.com/maps?t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"
                     scrolling="no"></iframe>
+                <script type="text/javascript">
+                        $(".locationPreferences").select2({
+                            tag: true, 
+                            placeholder: "Enter your Address",
+                            zIndexNumber: -1
+                        });
+               </script>
 
+
+
+                <!-- Change from input to select with input settings as well -->
+                <!-- Start -->
+                <!-- <label for="location">
+                <input type="text" class="roundedEdges" id="location" name="location" maxlength="128"
+                    placeholder="Enter your Address"></input>
+                </label>
+                <iframe width="100%" style="min-height: 300px" id="gmap"
+                    src="https://maps.google.com/maps?t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"
+                    scrolling="no"></iframe> -->
+                <!-- End -->
 
 
                 <label for="description">

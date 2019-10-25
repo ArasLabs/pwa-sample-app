@@ -444,15 +444,29 @@ function showUserReports() {
             card.appendChild(document.createTextNode(problemReport.title));
             card.appendChild(document.createElement("br"));
 
-            if (problemReport.location !== undefined && problemReport.location !== null && problemReport.location.length !== 0) {
-                var locationLink = document.createElement("a");
-                locationLink.innerText = problemReport.location;
-                locationLink.setAttribute("href", generateLocationLink(problemReport.location));
-                locationLink.setAttribute("target", "_blank");
-                card.appendChild(locationLink);
-            }
+            // Keep this in case we need location for cards:
+            // if (problemReport.location !== undefined && problemReport.location !== null && problemReport.location.length !== 0) {
+            //     var locationLink = document.createElement("a");
+            //     locationLink.innerText = problemReport.location;
+            //     locationLink.setAttribute("href", generateLocationLink(problemReport.location));
+            //     locationLink.setAttribute("target", "_blank");
+            //     card.appendChild(locationLink);
+            // }
 
             styleNode = document.createElement("div");
+
+            //create a div/span/etc containing the community svg image 
+            // Most likely:
+            // communityBtn.setAttribute("class", "communityBtn");
+            // communityBtn.setAttribute("class", communityBtn.getAttribute("class", " communityBtn"));
+
+
+            // communityBtn = document.createElement("button");
+            // card.appendChild(communityBtn);
+            // communityBtn.setAttribute("class", "communityBtn");
+            
+            
+            
             textNode = document.createTextNode(problemReport.state);
             styleNode.appendChild(textNode);
 

@@ -199,14 +199,18 @@ textarea,
 select,
 #problemDate {
   width: 100%;
-  padding: 10px 10px;
+  padding: 10px 17px;
   margin: 5px 0px;
   display: inline-block;
-  border: 1px solid #05386b;
+  border: 1px solid #aaaaaa;
   box-sizing: border-box;
   font-family: 'Helvetica',
     'Verdana',
     sans-serif;
+}
+
+.roundedEdges, #problemDate, #description {
+  border-radius: 4px;
 }
 
 option[value=""]:disabled {
@@ -363,6 +367,11 @@ form {
   outline: none;
 } */
 
+.dbCustomCss .select2-container .select2-selection--single .select2-selection__rendered {
+  padding-right: 14px;
+  padding-left: 0px;
+}
+
 .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
   border-color: transparent transparent #05386b transparent !important;
 }
@@ -373,14 +382,13 @@ form {
 
 .select2-container .select2-selection--single {
   height: 44px !important;
-  border-radius: 30px;
 }
 
 .select2-selection__rendered {
   font-family: 'Helvetica',
   'Verdana',
   sans-serif;
-  color: dimgray !important;
+  color: #6d6d6d !important;
   text-align: center;
   font-size: 25px;
   margin: 5px;
@@ -715,10 +723,25 @@ ul {
     sans-serif;
   background: white;
   display: inline-block;
-  border: 1px solid #ccc;
+  border: 1px solid #05386b;
+  border-radius: 8px;
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
+}
+
+.locationDropCustomCss .select2-selection__rendered{
+  text-align: left;
+  font-size: 15.333px;
+}
+
+.locationDropCustomCss .select2-container .select2-selection--single .select2-selection__rendered {
+  padding-left: 0%;
+}
+
+.locationDropCustomCss .select2-container {
+  margin-bottom: 10px;
+  margin-top: 5px;
 }
 
 .card h3 {
