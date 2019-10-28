@@ -168,20 +168,20 @@
                     scrolling="no"></iframe> -->
 
                 
-                <label for="location">
-                    <div class="locationDropCustomCss"><select class="locationPreferences" id="location" name="location" maxlength="128">
-                        <option>yes</option>
-                        <option>testg</option>
-                    </select></div>
-                </label>
+
                 <iframe width="100%" style="min-height: 300px" id="gmap"
                     src="https://maps.google.com/maps?t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"
                     scrolling="no"></iframe>
+                <label for="location">
+                    <div class="locationDropCustomCss"><select class="locationPreferences" id="location" name="location" maxlength="128">
+                    </select></div>
+                </label>
                 <script type="text/javascript">
                         $(".locationPreferences").select2({
                             tag: true, 
                             placeholder: "Enter your Address",
-                            zIndexNumber: -1
+                            zIndexNumber: -1,
+                            allowClear: true,
                         });
                </script>
 

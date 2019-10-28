@@ -558,3 +558,66 @@ function initLocationService() {
         updateLocation();
     })
 }
+
+function populateLocationList() {
+
+    var grabLocation = httpGet(oauthToken, serverURL + "/server/odata/PR?$select=location&$filter=location ne ''");
+    grabLocation.then(function(res) {
+	var resObj = JSON.parse(res.response);
+
+	var itemArray = resObj.value;
+	var locationData;
+	var distinctLocationData = [];
+	let locationField = document.getElementById("location");
+
+	itemArray.forEach(function(elem) {
+		if(distinctLocationData.indexOf(elem.location) === -1) {
+			distinctLocationData.push(elem.location);
+		}
+	});
+
+	distinctLocationData.forEach(function(item) {
+		let option = document.createElement("option");
+		option.text = item;
+		locationField.add(option);
+	});
+
+    });
+
+}
+
+
+// -----------------------------------------------------------------------------------------------
+
+
+
+//     grabLocation.then(function(res) {
+//         var resObj = JSON.parse(res.response);
+
+//         var itemArray = resObj.value;
+//         forEach(function(elem) {
+//             var locationData = elem.location;
+//         });
+
+//         let locationField = document.getElementsById("locationDropDown");
+
+//         if(locationData.length > 0) {
+//             locationData = locationData.filter(unique);
+//             forEach(function(i) {
+//                 locationData = locationData[i];
+//                 let option = document.createElement("option");
+//                 locationField.appendChild(locationData);
+//             });
+//         }
+//     });
+
+
+//     Need to get the Json tag for location
+//     Make each Json location value list unique so duplicates are not returned
+//     Grab option tags 
+//     Create new option tags containing locations 
+
+//     let option = document.createElement("option");
+//     option.text = database.id;
+//     databaseField.add(option);
+// }

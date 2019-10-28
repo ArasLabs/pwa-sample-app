@@ -740,8 +740,12 @@ ul {
 }
 
 .locationDropCustomCss .select2-container {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   margin-top: 5px;
+}
+
+#problemDate {
+  margin-bottom: 10px;
 }
 
 .card h3 {
