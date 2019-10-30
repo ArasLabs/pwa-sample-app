@@ -23,12 +23,12 @@
     <script src="scripts/oauthManager.js" async></script>
     <script src="scripts/app.js" async></script>
 
-    <!-- Select2 Boostrapping links: -->
+    <!-- Select2 Bootstrapping links: -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 
-    <!-- These are the kebab menu boostrap links: -->
+    <!-- These are the kebab menu bootstrap links: -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,300,700' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Nunito:400,700,300' rel='stylesheet' type='text/css'>
@@ -79,30 +79,6 @@
             <form class="modal-content animate" onsubmit="return loginFromUI();">
 
                 <div class="container">
-
-                    <!-- <div class="box">
-                    <label for="database">
-                        <select name="database" id="database" required>
-                            <option class="color" value="" disabled selected></option>
-                        </select>
-                    </label>
-                    </div> -->
-
-                    <!-- <script>
-                       $('select').each(function () {
-                            var $this = $(this),
-                                $list = $('<ul />');
-
-                            $this.find('option').each(function(){
-                                $list.append('<li>' + $(this).text() + '</li>');
-                            });
-
-                        $this.after( $list ).remove();
-                        });
-                    </script> -->
-
-
-                    <!-- New Dropdown  -->
                     <div class="dbCustomCss">
                     <label for="database">
                         <select class="select2DB" name="database" id="database" required>
@@ -147,18 +123,6 @@
                     <input type="date" id="problemDate" name="problemDate" value="">
                 </label>
 
-                <!-- <label for="location">
-                    <input type="text" list="locationList" id="location" name="location" maxlength="128"></input>
-                    <datalist id="locationList" class="locationPreferences">
-                        <option value="">yes</option>
-                        <option value="">no</option>
-                    </datalist>
-                </label>
-                <iframe width="100%" style="min-height: 300px" id="gmap"
-                    src="https://maps.google.com/maps?t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"
-                    scrolling="no"></iframe> -->
-
-                
 
                 <iframe width="100%" style="min-height: 300px" id="gmap"
                     src="https://maps.google.com/maps?t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"
@@ -167,6 +131,9 @@
                     <div class="locationDropCustomCss"><select class="locationPreferences" id="location" name="location" maxlength="128">
                     </select></div>
                 </label>
+                <!-- The script connects the location drop down to select2 
+                Also allows user to add new coordinates
+                Then when a coordinate is selected on the list updateLocation is called -->
                 <script type="text/javascript">
                         $(".locationPreferences").select2({
                             tags: true, 
@@ -184,22 +151,10 @@
                             if(e.params.data.isNew) {
                                 $(this).find('[value="'+e.params.data.id+'"]').replaceWith('<option selected value="'+e.params.data.id+'">'+e.params.data.text+'</option>');
                             }
-                        });
+                        }).on("select2:select", function(n) {
+                            updateLocation();
+                        })
                </script>
-
-
-
-                <!-- Change from input to select with input settings as well -->
-                <!-- Start -->
-                <!-- <label for="location">
-                <input type="text" class="roundedEdges" id="location" name="location" maxlength="128"
-                    placeholder="Enter your Address"></input>
-                </label>
-                <iframe width="100%" style="min-height: 300px" id="gmap"
-                    src="https://maps.google.com/maps?t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"
-                    scrolling="no"></iframe> -->
-                <!-- End -->
-
 
                 <label for="description">
                     <textarea id="description" placeholder="Describe the problem"></textarea>

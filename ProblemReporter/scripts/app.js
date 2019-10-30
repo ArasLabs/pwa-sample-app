@@ -549,6 +549,7 @@ function initLocationService() {
     });
 }
 
+//Populates the location dropdown with coordinates from REST request
 function populateLocationList() {
 
     var grabLocation = httpGet(oauthToken, serverURL + "/server/odata/PR?$select=location&$filter=location ne ''");
