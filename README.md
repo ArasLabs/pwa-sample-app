@@ -90,7 +90,7 @@ We used a JavaScript library called [Mapbox](https://www.mapbox.com/) to display
 ### Optional: Install the PWA on Your Device
 One of the neat benefits of using a PWA is that you can "install" the app on your device, providing an experience similar to a native application. Once the app is installed on your device you can view the PWA in its own window and pin it to your desktop or taskbar.
 
-![Problem Reporter in browser vs installed](./Screenshots/browser-vs-installed.png)
+![Problem Reporter in browser vs installed](./Screenshots/Browser-VS-Installed_New.png)
 *Side by side comparison of the Problem Reporter app running in a browser (left) vs. running as an installed app (right).*
 
 >Different platforms and browsers have adopted PWA features at different rates. Some are more comprehensive than others. Your device or browser may not support this feature.
@@ -101,7 +101,7 @@ Here's how you install a PWA on a Windows device using Google Chrome.
 2. In the address bar, you should see an option to install the Problem Reporter app. The action is also accessible in the main menu on the right.
     ![install the pwa](./Screenshots/Install-Action_New.png)
 3. Once you've clicked the install action, Chrome will ask you to confirm that you want to install the app.
-    ![confirmation dialog](./Screenshots/install-app-dialog.png)
+    ![confirmation dialog](./Screenshots/Install-App-Dialog_New.png)
 4. After you confirm that you want to install the app, the PWA will open in a new window.
 
 
