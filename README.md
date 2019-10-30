@@ -110,12 +110,12 @@ Here's how you install a PWA on a Windows device using Google Chrome.
 1. In your browser, enter the url for the Problem Reporter app. This should be your Innovator url, plus the string we configured in step 5 above: `https://{server}/{Innovator alias}/ProblemReporter`
 2. Login to the problem reporter app using your Innovator credentials. You can check off "Remember me" if you'd like to cache your credentials.
 
-    ![login screen](./Screenshots/pwa-login.png)
+    ![login screen](./Screenshots/PWA-Login_New.png)
 
 3. On the problem report form, enter the name and description for your problem. 
 4. If you would like to submit an image with your PR, click the camera icon to select an image file or take a new photo, depending on your device and browser support.
 
-    ![problem report form](./Screenshots/installed-pwa.png)
+    ![problem report form](./Screenshots/Installed-PWA_New.png)
 
 5. Click the **Submit Problem Report** button to send the report to Innovator and create a new PR item.
 6. To view the problem report in Innovator, login to your Innovator instance and search for the PR under **Change Management > PRs** in the TOC.
