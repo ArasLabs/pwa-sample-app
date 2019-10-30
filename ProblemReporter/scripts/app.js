@@ -26,7 +26,9 @@ function initialize() {
         }
     };
 
-    initLocationService();
+    //Added here since location select2 dropdown is not rendered before this is called
+    setTimeout(initLocationService, 100);
+    //TODO have select2 created as the page loads then call initLocationService
 
     // Checking if there is local storage
     if (window.localStorage) {
@@ -444,7 +446,7 @@ function showUserReports() {
             card.appendChild(document.createTextNode(problemReport.title));
             card.appendChild(document.createElement("br"));
 
-            // Keep this in case we need location for cards:
+            // Keep this in case we need location coordinates on cards:
             // if (problemReport.location !== undefined && problemReport.location !== null && problemReport.location.length !== 0) {
             //     var locationLink = document.createElement("a");
             //     locationLink.innerText = problemReport.location;
@@ -453,20 +455,7 @@ function showUserReports() {
             //     card.appendChild(locationLink);
             // }
 
-            styleNode = document.createElement("div");
-
-            //create a div/span/etc containing the community svg image 
-            // Most likely:
-            // communityBtn.setAttribute("class", "communityBtn");
-            // communityBtn.setAttribute("class", communityBtn.getAttribute("class", " communityBtn"));
-
-
-            // communityBtn = document.createElement("button");
-            // card.appendChild(communityBtn);
-            // communityBtn.setAttribute("class", "communityBtn");
-            
-            
-            
+            styleNode = document.createElement("div");            
             textNode = document.createTextNode(problemReport.state);
             styleNode.appendChild(textNode);
 
@@ -555,14 +544,16 @@ function initLocationService() {
     getLocation().then(function (coordinates) {
         //TODO convert coordinates to address using google api. 
         locationInputElement.value = encodeURI(coordinates);
+        populateLocationList();
         updateLocation();
-    })
+    });
 }
 
 function populateLocationList() {
 
     var grabLocation = httpGet(oauthToken, serverURL + "/server/odata/PR?$select=location&$filter=location ne ''");
     grabLocation.then(function(res) {
+    
 	var resObj = JSON.parse(res.response);
 
 	var itemArray = resObj.value;
@@ -580,44 +571,10 @@ function populateLocationList() {
 		let option = document.createElement("option");
 		option.text = item;
 		locationField.add(option);
-	});
+    });
+    
+    updateLocation();
 
     });
 
 }
-
-
-// -----------------------------------------------------------------------------------------------
-
-
-
-//     grabLocation.then(function(res) {
-//         var resObj = JSON.parse(res.response);
-
-//         var itemArray = resObj.value;
-//         forEach(function(elem) {
-//             var locationData = elem.location;
-//         });
-
-//         let locationField = document.getElementsById("locationDropDown");
-
-//         if(locationData.length > 0) {
-//             locationData = locationData.filter(unique);
-//             forEach(function(i) {
-//                 locationData = locationData[i];
-//                 let option = document.createElement("option");
-//                 locationField.appendChild(locationData);
-//             });
-//         }
-//     });
-
-
-//     Need to get the Json tag for location
-//     Make each Json location value list unique so duplicates are not returned
-//     Grab option tags 
-//     Create new option tags containing locations 
-
-//     let option = document.createElement("option");
-//     option.text = database.id;
-//     databaseField.add(option);
-// }

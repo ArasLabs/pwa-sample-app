@@ -272,8 +272,6 @@ img.avatar {
   border-radius: 25px;
 }
 
-/* From this link: https://product.hubspot.com/blog/how-to-build-a-sleek-animated-input-form-with-css */
-
 form {
   text-align: center;
 }
@@ -344,29 +342,6 @@ form {
   transform: translateY(-74px);
 }
 
-/* Check up until this point" */
-
-/* .box select {
-  font-family: 'Helvetica',
-  'Verdana',
-  sans-serif;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
- 
-  display: block;
-  background: url(data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0Ljk1IDEwIj48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6I2ZmZjt9LmNscy0ye2ZpbGw6IzQ0NDt9PC9zdHlsZT48L2RlZnM+PHRpdGxlPmFycm93czwvdGl0bGU+PHJlY3QgY2xhc3M9ImNscy0xIiB3aWR0aD0iNC45NSIgaGVpZ2h0PSIxMCIvPjxwb2x5Z29uIGNsYXNzPSJjbHMtMiIgcG9pbnRzPSIxLjQxIDQuNjcgMi40OCAzLjE4IDMuNTQgNC42NyAxLjQxIDQuNjciLz48cG9seWdvbiBjbGFzcz0iY2xzLTIiIHBvaW50cz0iMy41NCA1LjMzIDIuNDggNi44MiAxLjQxIDUuMzMgMy41NCA1LjMzIi8+PC9zdmc+) no-repeat 100% 50%;
-  
-  border: none;
-  border-radius: 11px;
-  background-color: rgb(255, 255, 255);
-  
-  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.3);
-  -webkit-appearance: button;
-  outline: none;
-} */
-
 .dbCustomCss .select2-container .select2-selection--single .select2-selection__rendered {
   padding-right: 14px;
   padding-left: 0px;
@@ -405,7 +380,6 @@ form {
 
 .select2-results__option--highlighted { 
   background-color: #2bbbad !important;
-  /* box-shadow: 0 8px 17px 0 rgba(0,0,0,.2), 0 6px 20px 0 rgba(0,0,0,.19);  */
   margin: 3px;
 }
 
@@ -611,8 +585,6 @@ h1 {
 
 .dropMenu li .onlySideNavDrop:hover {
   background: #05386B;
-  /* box-shadow: 0 8px 17px 0 rgba(0,0,0,.2), 0 6px 20px 0 rgba(0,0,0,.19); */
-  /* box-shadow: 0 2px 20px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); */
 }
 
 .dropMenu:hover ul {
@@ -724,7 +696,7 @@ ul {
   background: white;
   display: inline-block;
   border: 1px solid #05386b;
-  border-radius: 8px;
+  border-radius: 4px;
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
