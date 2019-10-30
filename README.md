@@ -99,7 +99,7 @@ Here's how you install a PWA on a Windows device using Google Chrome.
 
 1. In your browser, enter the url for the Problem Reporter app.
 2. In the address bar, you should see an option to install the Problem Reporter app. The action is also accessible in the main menu on the right.
-    ![install the pwa](./Screenshots/install-action.png)
+    ![install the pwa](./Screenshots/Install-Action_New.png)
 3. Once you've clicked the install action, Chrome will ask you to confirm that you want to install the app.
     ![confirmation dialog](./Screenshots/install-app-dialog.png)
 4. After you confirm that you want to install the app, the PWA will open in a new window.
