@@ -2,6 +2,16 @@
   box-sizing: border-box;
 }
 
+@media only screen and (max-width: 375px) {
+  .smallerButton {
+    width: 60% !important;
+  }
+  .modules {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
 html,
 body {
   padding: 0;
@@ -463,7 +473,9 @@ span.psw {
 
 .modules {
   display: none;
-  padding: 10px;
+  padding: 20px;
+  padding-right: 18%;
+  padding-left: 18%;
 }
 
 #imageUpload {
