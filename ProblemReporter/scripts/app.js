@@ -531,7 +531,7 @@ function generateEmbedLocationLink(location) {
 
 function updateLocation() {
     var mapFrame = document.getElementById("gmap");
-    var location = document.getElementById('location').value;
+    var location = document.getElementById('location').selectedOptions[0].value;
     var src = generateEmbedLocationLink(location);
     mapFrame.setAttribute("src", src);
 }
@@ -542,15 +542,13 @@ function initLocationService() {
     locationInputElement.addEventListener("input", updateLocation);
     locationInputElement.addEventListener("change", updateLocation);
     getLocation().then(function (coordinates) {
-        //TODO convert coordinates to address using google api. 
-        locationInputElement.value = encodeURI(coordinates);
-        populateLocationList();
+        populateLocationList(encodeURI(coordinates));
         updateLocation();
     });
 }
 
 //Populates the location dropdown with coordinates from REST request
-function populateLocationList() {
+function populateLocationList(coordinates) {
 
     var grabLocation = httpGet(oauthToken, serverURL + "/server/odata/PR?$select=location&$filter=location ne ''");
     grabLocation.then(function(res) {
@@ -558,11 +556,11 @@ function populateLocationList() {
 	var resObj = JSON.parse(res.response);
 
 	var itemArray = resObj.value;
-	var locationData;
-	var distinctLocationData = [];
+    var distinctLocationData = [coordinates];
+    
 	let locationField = document.getElementById("location");
 
-	itemArray.forEach(function(elem) {
+    itemArray.forEach(function(elem) {
 		if(distinctLocationData.indexOf(elem.location) === -1) {
 			distinctLocationData.push(elem.location);
 		}

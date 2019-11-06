@@ -148,11 +148,10 @@
                                 }
                             }
                         }).on("select2:select", function(e) {
+                            updateLocation();
                             if(e.params.data.isNew) {
                                 $(this).find('[value="'+e.params.data.id+'"]').replaceWith('<option selected value="'+e.params.data.id+'">'+e.params.data.text+'</option>');
                             }
-                        }).on("select2:select", function(n) {
-                            updateLocation();
                         })
                </script>
 
