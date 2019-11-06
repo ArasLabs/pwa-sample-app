@@ -138,6 +138,7 @@ For more information on contributing to this project, another Aras Labs project,
 
 Created by Andrew Johnson, Chris Gillis, Eli Donahue, and Ivan Bidolakh for Aras Labs.
 
+Updated by Nithin Mahesh for Aras Labs. 
 
 ## License
 
