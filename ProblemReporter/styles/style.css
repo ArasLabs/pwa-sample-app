@@ -507,7 +507,7 @@ span.psw {
   position: relative;
   display: inline-block;
   box-sizing: border-box;
-  padding: 0 16px;
+  padding: 1px 15px;
   position: fixed;
   top: 7px;
   right: 0px;
@@ -646,58 +646,6 @@ ul {
 @media screen and (max-width: 800px) {
   .follow {
     margin: 400px auto 0;
-  }
-}
-
-/* Ends here */
-
-
-/* The side navigation menu */
-.sidenav {
-  height: 100%;
-  width: 0;
-  position: fixed;
-  z-index: 2;
-  top: 0;
-  left: 0;
-  color: white;
-  background-color: #2bbbad;
-  overflow-x: hidden;
-  padding-top: 60px;
-  transition: 0.2s;
-}
-
-/* The navigation menu links */
-.sidenav a {
-  padding: 8px 8px 8px 32px;
-  text-decoration: none;
-  font-size: 20px;
-  color: white;
-  display: block;
-  transition: 0.3s;
-}
-
-/* When you mouse over the navigation links, change their color */
-.sidenav a:hover {
-  color: darkgrey;
-}
-
-/* Position and style the close button (top right corner) */
-.sidenav .closebtn {
-  position: absolute;
-  top: 0;
-  right: 15px;
-  font-size: 36px;
-}
-
-/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-@media screen and (max-height: 450px) {
-  .sidenav {
-    padding-top: 15px;
-  }
-
-  .sidenav a {
-    font-size: 18px;
   }
 }
 

@@ -20,15 +20,16 @@ function initialize() {
     let urlComponents = window.location.href.split('/');
     serverURL = urlComponents[0] + "//" + urlComponents[2] + "/" + urlComponents[3];
 
-    window.onclick = function (event) {
-        if (!event.target.matches('#navButton') && event.target.getAttribute("id") !== 'fa fa-bars') {
-            closeNav();
-        }
-    };
-
     //Added here since location select2 dropdown is not rendered before this is called
     setTimeout(initLocationService, 100);
     //TODO have select2 created as the page loads then call initLocationService
+
+    // Closes kebab dropdown menu when click elsewhere
+    window.onclick = function (event) {
+        if (!event.target.matches('.kebab') && !event.target.matches('.middle') && !event.target.matches('.edges')) {
+            closeNav();
+        }
+    };
 
     // Checking if there is local storage
     if (window.localStorage) {
@@ -49,17 +50,12 @@ function initialize() {
 }
 
 /**
- * Opens the left side navigation bar
- */
-function openNav() {
-    document.getElementById("sideNav").style.width = "250px";
-}
-
-/**
- * Closes the left side navigation bar
+ * Closes the right kebab dropdown menu
  */
 function closeNav() {
-    document.getElementById("sideNav").style.width = "0";
+    $('ul.dropMenu.sideNavScheme.active').removeClass('active');
+    $('.middle.active').removeClass('active');
+    $('.cross.active').removeClass('active');
 }
 
 /**
