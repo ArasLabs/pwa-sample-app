@@ -90,7 +90,7 @@ We used a JavaScript library called [Mapbox](https://www.mapbox.com/) to display
 ### Optional: Install the PWA on Your Device
 One of the neat benefits of using a PWA is that you can "install" the app on your device, providing an experience similar to a native application. Once the app is installed on your device you can view the PWA in its own window and pin it to your desktop or taskbar.
 
-![Problem Reporter in browser vs installed](./Screenshots/browser-vs-installed.png)
+![Problem Reporter in browser vs installed](./Screenshots/Browser-VS-Installed_New.png)
 *Side by side comparison of the Problem Reporter app running in a browser (left) vs. running as an installed app (right).*
 
 >Different platforms and browsers have adopted PWA features at different rates. Some are more comprehensive than others. Your device or browser may not support this feature.
@@ -99,9 +99,9 @@ Here's how you install a PWA on a Windows device using Google Chrome.
 
 1. In your browser, enter the url for the Problem Reporter app.
 2. In the address bar, you should see an option to install the Problem Reporter app. The action is also accessible in the main menu on the right.
-    ![install the pwa](./Screenshots/install-action.png)
+    ![install the pwa](./Screenshots/Install-Action_New.png)
 3. Once you've clicked the install action, Chrome will ask you to confirm that you want to install the app.
-    ![confirmation dialog](./Screenshots/install-app-dialog.png)
+    ![confirmation dialog](./Screenshots/Install-App-Dialog_New.png)
 4. After you confirm that you want to install the app, the PWA will open in a new window.
 
 
@@ -110,12 +110,12 @@ Here's how you install a PWA on a Windows device using Google Chrome.
 1. In your browser, enter the url for the Problem Reporter app. This should be your Innovator url, plus the string we configured in step 5 above: `https://{server}/{Innovator alias}/ProblemReporter`
 2. Login to the problem reporter app using your Innovator credentials. You can check off "Remember me" if you'd like to cache your credentials.
 
-    ![login screen](./Screenshots/pwa-login.png)
+    ![login screen](./Screenshots/PWA-Login_New.png)
 
 3. On the problem report form, enter the name and description for your problem. 
 4. If you would like to submit an image with your PR, click the camera icon to select an image file or take a new photo, depending on your device and browser support.
 
-    ![problem report form](./Screenshots/installed-pwa.png)
+    ![problem report form](./Screenshots/Installed-PWA_New.png)
 
 5. Click the **Submit Problem Report** button to send the report to Innovator and create a new PR item.
 6. To view the problem report in Innovator, login to your Innovator instance and search for the PR under **Change Management > PRs** in the TOC.
