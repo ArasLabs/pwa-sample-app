@@ -20,16 +20,13 @@ function initialize() {
     let urlComponents = window.location.href.split('/');
     serverURL = urlComponents[0] + "//" + urlComponents[2] + "/" + urlComponents[3];
 
-    //Added here since location select2 dropdown is not rendered before this is called
-    setTimeout(initLocationService, 100);
-    //TODO have select2 created as the page loads then call initLocationService
-
-    // Closes kebab dropdown menu when click elsewhere
     window.onclick = function (event) {
-        if (!event.target.matches('.kebab') && !event.target.matches('.middle') && !event.target.matches('.edges')) {
+        if (!event.target.matches('#navButton') && event.target.getAttribute("id") !== 'fa fa-bars') {
             closeNav();
         }
     };
+
+    initLocationService();
 
     // Checking if there is local storage
     if (window.localStorage) {
@@ -50,12 +47,17 @@ function initialize() {
 }
 
 /**
- * Closes the right kebab dropdown menu
+ * Opens the left side navigation bar
+ */
+function openNav() {
+    document.getElementById("sideNav").style.width = "250px";
+}
+
+/**
+ * Closes the left side navigation bar
  */
 function closeNav() {
-    $('ul.dropMenu.sideNavScheme.active').removeClass('active');
-    $('.middle.active').removeClass('active');
-    $('.cross.active').removeClass('active');
+    document.getElementById("sideNav").style.width = "0";
 }
 
 /**
@@ -64,7 +66,6 @@ function closeNav() {
  */
 function populateDatabaseList(databaseList) {
     let databaseField = document.getElementById("database");
-    while(databaseField.firstChild) { databaseField.removeChild(databaseField.firstChild);}
     let databases = getXMLElementsFromXmlHttpResponse(databaseList, "DB");
 
     // if the url is a valid innovator instance, add the databases to the dropdown
@@ -442,16 +443,15 @@ function showUserReports() {
             card.appendChild(document.createTextNode(problemReport.title));
             card.appendChild(document.createElement("br"));
 
-            // Keep this in case we need location coordinates on cards:
-            // if (problemReport.location !== undefined && problemReport.location !== null && problemReport.location.length !== 0) {
-            //     var locationLink = document.createElement("a");
-            //     locationLink.innerText = problemReport.location;
-            //     locationLink.setAttribute("href", generateLocationLink(problemReport.location));
-            //     locationLink.setAttribute("target", "_blank");
-            //     card.appendChild(locationLink);
-            // }
+            if (problemReport.location !== undefined && problemReport.location !== null && problemReport.location.length !== 0) {
+                var locationLink = document.createElement("a");
+                locationLink.innerText = problemReport.location;
+                locationLink.setAttribute("href", generateLocationLink(problemReport.location));
+                locationLink.setAttribute("target", "_blank");
+                card.appendChild(locationLink);
+            }
 
-            styleNode = document.createElement("div");            
+            styleNode = document.createElement("div");
             textNode = document.createTextNode(problemReport.state);
             styleNode.appendChild(textNode);
 
@@ -527,7 +527,7 @@ function generateEmbedLocationLink(location) {
 
 function updateLocation() {
     var mapFrame = document.getElementById("gmap");
-    var location = document.getElementById('location').selectedOptions[0].value;
+    var location = document.getElementById('location').value;
     var src = generateEmbedLocationLink(location);
     mapFrame.setAttribute("src", src);
 }
@@ -538,38 +538,8 @@ function initLocationService() {
     locationInputElement.addEventListener("input", updateLocation);
     locationInputElement.addEventListener("change", updateLocation);
     getLocation().then(function (coordinates) {
-        populateLocationList(encodeURI(coordinates));
+        //TODO convert coordinates to address using google api. 
+        locationInputElement.value = encodeURI(coordinates);
         updateLocation();
-    });
-}
-
-//Populates the location dropdown with coordinates from REST request
-function populateLocationList(coordinates) {
-
-    var grabLocation = httpGet(oauthToken, serverURL + "/server/odata/PR?$select=location&$filter=location ne ''");
-    grabLocation.then(function(res) {
-    
-	var resObj = JSON.parse(res.response);
-
-	var itemArray = resObj.value;
-    var distinctLocationData = [coordinates];
-    
-	let locationField = document.getElementById("location");
-
-    itemArray.forEach(function(elem) {
-		if(distinctLocationData.indexOf(elem.location) === -1) {
-			distinctLocationData.push(elem.location);
-		}
-	});
-
-	distinctLocationData.forEach(function(item) {
-		let option = document.createElement("option");
-		option.text = item;
-		locationField.add(option);
-    });
-    
-    updateLocation();
-
-    });
-
+    })
 }

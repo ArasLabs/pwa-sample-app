@@ -2,16 +2,6 @@
   box-sizing: border-box;
 }
 
-@media only screen and (max-width: 375px) {
-  .smallerButton {
-    width: 60% !important;
-  }
-  .modules {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-}
-
 html,
 body {
   padding: 0;
@@ -21,7 +11,7 @@ body {
   font-family: 'Helvetica', 'Verdana', sans-serif;
   font-weight: 400;
   font-display: optional;
-  color: #05386B;
+  color: #444;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -54,14 +44,14 @@ body {
   -webkit-align-content: stretch;
   -ms-flex-line-pack: stretch;
   align-content: stretch;
-  background: #EDF5E1;
+  background: #ececec;
 }
 
 .header {
-  background-color:#2bbbad;
+  background-color: #3F51B5;
   color: white;
   width: 100%;
-  height: 46px;
+  height: 56px;
 }
 
 .header_title {
@@ -89,25 +79,6 @@ body {
 .header .navButton:hover {
   background-color: darkgrey;
   color: black;
-}
-
-/* Changing smaller submit button */
-.smallerButton {
-  margin-top: 30px;
-  width: 35%;
-  padding: 10px 10px 10px 10px;
-}
-
-/* Remember me font style change to keep consistent*/
-#rememberMe {
-  font-family: 'Helvetica',
-    'Verdana',
-    sans-serif;
-}
-
-/* Login button font style change to keep consistent */
-.submitButtonFont {
-  font-family: Helvetica, 'Verdana', sans-serif;
 }
 
 .loader {
@@ -209,18 +180,15 @@ textarea,
 select,
 #problemDate {
   width: 100%;
-  padding: 10px 17px;
-  margin: 5px 0px;
+  padding: 12px 20px;
+  margin: 8px 0;
   display: inline-block;
-  border: 1px solid #aaaaaa;
+  border: 1px solid #ccc;
   box-sizing: border-box;
   font-family: 'Helvetica',
     'Verdana',
     sans-serif;
-}
 
-.roundedEdges, #problemDate, #description {
-  border-radius: 4px;
 }
 
 option[value=""]:disabled {
@@ -233,16 +201,12 @@ select:invalid {
 }
 
 button {
-  background-color: #2bbbad;
-  border: 0px solid white;
-  border-radius: 27px;
+  background-color: #3F51B5;
   color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
   cursor: pointer;
-  font-size: 20px;
-  margin-top: 12px;
-  padding: 15px 30px;
-  text-transform: uppercase;
-  transition: all 200ms;
   width: 100%;
 }
 
@@ -276,133 +240,7 @@ img.avatar {
 }
 
 .container {
-  padding: 10px;
-  min-width: 250px;
-  background: white;
-  border-radius: 25px;
-}
-
-form {
-  text-align: center;
-}
-
-.labelTransitions {
-  display: block;
-  letter-spacing: 4px;
-  padding-top: 15px;
-  text-align: center;
-}
-
-.labelTransitions .label-text {
-  color: #9B9B9B;
-  cursor: text;
-  font-size: 20px;
-  line-height: 20px;
-  text-transform: uppercase;
-  -moz-transform: translateY(-45px);
-  -ms-transform: translateY(-45px);
-  -webkit-transform: translateY(-45px);
-  transform: translateY(-45px);
-  transition: all 0.4s;
-}
-
-.labelTransitions input {
-  background-color: transparent;
-  border: 0;
-  border-bottom: 2px solid #4A4A4A;
-  margin-bottom: 5px;
-  color: dimgray;
-  font-size: 25px;
-  letter-spacing: -1px;
-  outline: 0;
-  padding: 5px 20px;
-  text-align: center;
-  transition: all 0.4s;
-  width: 200px;
-}
-
-#username {
-  margin-top: 40px;
-}
-
-#password {
-  margin-top: 20px;
-}
-
-.labelTransitions input:focus {
-  max-width: 100%;
-  width: fit-content;
-  min-width: 50px;
-}
-
-.labelTransitions input:focus + .label-text {
-  color: #F0F0F0;
-  font-size: 13px;
-  -moz-transform: translateY(-90px);
-  -ms-transform: translateY(-90px);
-  -webkit-transform: translateY(-90px);
-  transform: translateY(-90px);
-}
-
-.labelTransitions input:valid + .label-text {
-  font-size: 13px;
-  -moz-transform: translateY(-74px);
-  -ms-transform: translateY(-74px);
-  -webkit-transform: translateY(-74px);
-  transform: translateY(-74px);
-}
-
-.dbCustomCss .select2-container .select2-selection--single .select2-selection__rendered {
-  padding-right: 14px;
-  padding-left: 0px;
-}
-
-.select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
-  border-color: transparent transparent #05386b transparent !important;
-}
-
-.select2-container--default .select2-selection--single .select2-selection__arrow b {
-  border-color: #05386b transparent transparent transparent !important;
-} 
-
-.select2-container .select2-selection--single {
-  height: 44px !important;
-}
-
-.select2-selection__rendered {
-  font-family: 'Helvetica',
-  'Verdana',
-  sans-serif;
-  color: #6d6d6d !important;
-  text-align: center;
-  font-size: 25px;
-  margin: 5px;
-}
-
-.select2-selection__arrow {
-  margin: 5px;
-}
-
-.select2-results__options {
-  box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
-  opacity: 1;
-}
-
-.select2-results__option--highlighted { 
-  background-color: #2bbbad !important;
-  margin: 3px;
-}
-
-.select2 {
-  width: 100% !important; 
-}
-
-.select2-selection--single {
-  padding-left: 14px;
-}
-
-.select2-container--default .select2-selection--multiple {
-  border-radius: 100px;
+  padding: 16px;
 }
 
 span.psw {
@@ -428,13 +266,14 @@ span.psw {
 
 /* Modal Content/Box */
 .modal-content {
-  background-color: white;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: inherit;
-  border-radius: 25px;
+
+  background-color: #fefefe;
+  position: absolute;
+  top: 13%;
+  left: 10%;
+  border: 1px solid #888;
+  width: 80%;
+  /* height: 90% */
 }
 
 /* Add Zoom Animation */
@@ -473,9 +312,8 @@ span.psw {
 
 .modules {
   display: none;
-  padding: 20px;
-  padding-right: 18%;
-  padding-left: 18%;
+  padding: 16px;
+
 }
 
 #imageUpload {
@@ -485,10 +323,9 @@ span.psw {
 #photoButton {
   background-image: url("../images/camera.png");
   background-repeat: no-repeat;
-  background-color: rgba(0, 0, 0, 0.16);
-  border-radius: 100px;
+  background-color: darkgrey;
   background-position: center;
-  min-height: 5em;
+  min-height: 10em;
   background-size: contain;
 }
 
@@ -496,156 +333,56 @@ span.psw {
   font-family: 'Helvetica',
     'Verdana',
     sans-serif;
-  min-height: 5em;
-  height: 7em;
+  min-height: 12em;
+  height: 12em;
 }
 
-/* Side menu nav redo right here */
-
-.kebab {
-  cursor: pointer;
-  position: relative;
-  display: inline-block;
-  box-sizing: border-box;
-  padding: 1px 15px;
+/* The side navigation menu */
+.sidenav {
+  height: 100%;
+  width: 0;
   position: fixed;
-  top: 7px;
-  right: 0px;
-}
-
-.kebab figure {
-  width: 6px;
-  height: 6px;
-  border-radius: 5px;
-  background: white;
-  margin: 3px;
-}
-
-.middle {
-  transition: all 0.25s cubic-bezier(0.72, 1.2, 0.71, 0.72);
-  transform: scale(1);
-  position: relative;
-  box-shadow: 0 0.1px 0.1px 0 rgba(0, 0, 0, 0.16), 0 0.1px 0.3px 0 rgba(0, 0, 0, 0.12);
-  -webkit-filter: blur(0.1px);
-  filter: blur(0.1px);
-}
-
-.middle.active {
-  transform: scale(4.5);
-  transition: all 0.25s cubic-bezier(0.32, 2.04, 0.85, 0.54);
-  box-shadow: 0 0.1px 0.1px 0 rgba(0, 0, 0, 0.16), 0 0.1px 0.3px 0 rgba(0, 0, 0, 0.12);
-}
-
-.cross {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  margin-top: -1px;
-  font-family: "Nunito", sans-serif;
-  color: #05386B;
-  transition: all 0.2s cubic-bezier(0.72, 1.2, 0.71, 0.72);
-  font-size: 22px;
-  user-select: none;
-}
-
-.cross.active {
-  transform: translate(-50%, -50%) scale(1);
-  transition: all 0.15s cubic-bezier(0.32, 2.04, 0.85, 0.54);
-}
-
-h1 {
-  font-size: 26px;
-  background: #2bbbad;
+  z-index: 2;
+  top: 0;
+  left: 0;
   color: white;
-  padding: 10px 8px;
-  margin-bottom: 50px;
+  background-color: dimgrey;
+  overflow-x: hidden;
+  padding-top: 60px;
+  transition: 0.2s;
 }
 
-.onlySideNavDrop, .sideNavScheme {
-  color: white;
+/* The navigation menu links */
+.sidenav a {
+  padding: 8px 8px 8px 32px;
   text-decoration: none;
-  background-color: #2bbbad;
-  border-radius: 12px;
-}
-
-.dropMenu {
-  position: absolute;
-  margin: 10px;
-  height: fit-content;
-  width: fit-content;
-  right: 10px;
-  top: 1.1em;
-  transition: all 0.25s ease-out;
-  transform: scale(0);
-  transform-origin: 100% 0;
-  box-shadow: 2px 2px 4px 4px rgba(0, 0, 0, 0.16), 0px 20px 8px 0px rgba(0, 0, 0, 0.12);
-}
-
-.dropMenu li {
-  display: block;
-  margin: 3px;
-}
-
-.dropMenu li .onlySideNavDrop {
-  width: 100%;
-  padding: 1em 30px;
-  display: inline-block;
-  white-space: pre;
-  box-sizing: border-box;
-}
-
-.dropMenu li .onlySideNavDrop:hover {
-  background: #05386B;
-}
-
-.dropMenu:hover ul {
-  transform: scale(1);
-}
-
-ul {
-  padding-inline-start: 0px;
-}
-
-.dropMenu.active {
-  transform: scale(1);
-  transition: all 0.25s cubic-bezier(0.5, 1.8, 0.9, 0.8);
-}
-
-.follow {
-  overflow: hidden;
-  width: 42px;
-  height: 42px;
-  border-radius: 50px;
-  background: #03A9F4;
-  display: block;
-  margin: 300px auto 0;
-  white-space: nowrap;
-  padding: 13px;
-  box-sizing: border-box;
+  font-size: 20px;
   color: white;
-  transition: all 0.2s ease;
-  font-family: Roboto, sans-serif;
-  text-decoration: none;
-  box-shadow: 0 5px 6px 0 rgba(0, 0, 0, 0.2);
+  display: block;
+  transition: 0.3s;
 }
 
-.follow i {
-  margin-right: 20px;
-  transition: margin-right 0.2s ease;
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+  color: darkgrey;
 }
 
-.follow:hover {
-  width: 134px;
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 15px;
+  font-size: 36px;
 }
 
-.follow:hover i {
-  margin-right: 10px;
-}
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px;
+  }
 
-@media screen and (max-width: 800px) {
-  .follow {
-    margin: 400px auto 0;
+  .sidenav a {
+    font-size: 18px;
   }
 }
 
@@ -655,29 +392,10 @@ ul {
     sans-serif;
   background: white;
   display: inline-block;
-  border: 1px solid #05386b;
-  border-radius: 4px;
+  border: 1px solid #ccc;
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
-}
-
-.locationDropCustomCss .select2-selection__rendered{
-  text-align: left;
-  font-size: 15.333px;
-}
-
-.locationDropCustomCss .select2-container .select2-selection--single .select2-selection__rendered {
-  padding-left: 0%;
-}
-
-.locationDropCustomCss .select2-container {
-  margin-bottom: 5px;
-  margin-top: 5px;
-}
-
-#problemDate {
-  margin-bottom: 10px;
 }
 
 .card h3 {

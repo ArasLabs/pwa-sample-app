@@ -22,51 +22,23 @@
     <script src="scripts/httpRequestManager.js" async></script>
     <script src="scripts/oauthManager.js" async></script>
     <script src="scripts/app.js" async></script>
-
-    <!-- Select2 Bootstrapping links: -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
-
-    <!-- These are the kebab menu bootstrap links: -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,300,700' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Nunito:400,700,300' rel='stylesheet' type='text/css'>
 </head>
 
 <body onload="initialize()">
 
-
-    <div class="kebab" id="kebab">
-       <figure class="edges"></figure>
-       <figure class="middle"></figure>
-            <p class="cross">x</p>
-        <figure class="edges"></figure>
-        <ul class="dropMenu sideNavScheme">
-            <li class="sideNavScheme"><a class="onlySideNavDrop" onclick="showModule('newReportModule')" href="#">Create New Report</a></li>
-            <li class="sideNavScheme"><a class="onlySideNavDrop" onclick="showModule('allReportsModule'); showUserReports();" href="#">Show Open Reports</a></li>
-            <li class="sideNavScheme"><a class="onlySideNavDrop" onclick="signOut()" href="#">Sign Out</a></li>
-        </ul>
-    </div>
-
-    <!-- Script for the kebab menu dropdown replacing the hamburger -->
-    <script type="text/javascript">
-        var kebab = document.querySelector('.kebab'),
-        middle = document.querySelector('.middle'),
-        cross = document.querySelector('.cross'),
-        dropdown = document.querySelector('.dropMenu');
-
-        kebab.addEventListener('click', function() {
-            middle.classList.toggle('active');
-            cross.classList.toggle('active');
-            dropdown.classList.toggle('active');
-        });
-    </script>
-
     <header class="header">
+        <button class="navButton" id="navButton" onclick="openNav()" aria-label="Menu">
+            <i class="fa fa-bars" id="fa fa-bars"></i>
+        </button>
         <h1 class=" header_title">Problem Reporter</h1>
     </header>
 
+    <div id="sideNav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a onclick="showModule('newReportModule')" href="#">Create New Report</a>
+        <a onclick="showModule('allReportsModule'); showUserReports();" href="#">Show Open Reports</a>
+        <a onclick="signOut()" href="#">Sign Out</a>
+    </div>
 
     <div id="loader" class="loader">
         <svg viewBox="0 0 32 32" width="32" height="32">
@@ -77,93 +49,57 @@
     <main class="main" id="main">
         <div id="loginDialog" class="modal">
             <form class="modal-content animate" onsubmit="return loginFromUI();">
+                <div class="imgcontainer">
+                    <img src="images/avatar.png" alt="Avatar" class="avatar">
+                </div>
 
                 <div class="container">
-                    <div class="dbCustomCss">
-                    <label for="database">
-                        <select class="select2DB" name="database" id="database" required>
-                            <option value="" disabled selected></option>
-                        </select>
-                    </label>
-                    </div>
-                    <!-- This script is for the database dropdown with select2 -->
-                    <script type="text/javascript">
-                        $(".select2DB").select2({
-                            minimumResultsForSearch:-1,
-                            tag: false, 
-                            placeholder: "Database",
-                        });
-                    </script>
+                    <label for="database"><b>Database</b></label>
+                    <select name="database" id="database" required>
+                        <option value="" disabled selected>Database Name</option>
+                    </select>
 
-                    <label for="username" class="labelTransitions">
-                        <input type="text" id="username" placeholder="" name="username"
-                            autocomplete="username" required>
-                        <div class="label-text">Username</div>
+                    <label for="username"><b>Username</b></label>
+                    <input type="text" id="username" placeholder="Enter Username" name="username"
+                        autocomplete="username" required>
+
+                    <label for="password"><b>Password</b></label>
+                    <input type="password" id="password" placeholder="Enter Password" name="password"
+                        autocomplete="current-password" required>
+
+                    <label>
+                        <input type="checkbox" id="rememberMe" name="rememberMe" checked="checked"> Remember me
                     </label>
 
-                    <label for="password" class="labelTransitions">
-                        <input type="password" id="password" placeholder="" name="password"
-                            autocomplete="current-password" required>
-                        <div class="label-text">Password</div>
-                    </label>
-
-                    <input type="checkbox" id="rememberMe" name="rememberMe" checked="checked"> Remember me
-                    
-                    <button class="submitButtonFont" type="submit">Login</button>
+                    <button type="submit">Login</button>
                 </div>
             </form>
         </div>
         <div id="newReportModule" class="modules">
             <form>
-                <label for="title">
-                    <input id="title" name="title" class="inputText roundedEdges" type="text" placeholder="Problem Summary"></input>
-                </label>
+                <label for="title"><b>Title</b></label>
+                <input id="title" name="title" class="inputText" type="text" placeholder="Problem Summary"></input>
 
-                <label for="problemDate">
-                    <input type="date" id="problemDate" name="problemDate" value="">
-                </label>
+                <label for="problemDate"><b>Date</b></label>
+                <input type="date" id="problemDate" name="problemDate" value="">
 
-
+                <label for="location"><b>Location</b></label>
+                <input type="text" id="location" name="location" maxlength="128"
+                    placeholder="Enter your Address"></input>
                 <iframe width="100%" style="min-height: 300px" id="gmap"
                     src="https://maps.google.com/maps?t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"
                     scrolling="no"></iframe>
-                <label for="location">
-                    <div class="locationDropCustomCss"><select class="locationPreferences" id="location" name="location" maxlength="128">
-                    </select></div>
-                </label>
-                <!-- The script connects the location drop down to select2 
-                Also allows user to add new coordinates
-                Then when a coordinate is selected on the list updateLocation is called -->
-                <script type="text/javascript">
-                        $(".locationPreferences").select2({
-                            tags: true, 
-                            placeholder: "Enter your Address",
-                            zIndexNumber: -1,
-                            allowClear: true,
-                            createTag: function(tag) {
-                                return {
-                                    id: tag.term,
-                                    text: tag.term,
-                                    isNew : true
-                                }
-                            }
-                        }).on("select2:select", function(e) {
-                            updateLocation();
-                            if(e.params.data.isNew) {
-                                $(this).find('[value="'+e.params.data.id+'"]').replaceWith('<option selected value="'+e.params.data.id+'">'+e.params.data.text+'</option>');
-                            }
-                        })
-               </script>
 
-                <label for="description">
-                    <textarea id="description" placeholder="Describe the problem"></textarea>
-                </label>
+
+
+                <label for="description"><b>Description</b></label>
+                <textarea id="description" placeholder="Describe the problem"></textarea>
 
                 <input type="file" id="imageUpload" onchange="getImage();" accept="image/*"></input>
                 <button id="photoButton" onclick="document.getElementById('imageUpload').click(); return false;">
                 </button>
 
-                <button class="smallerButton" type="submit" onclick="submitReport(); return false;">Submit</button>
+                <button type="submit" onclick="submitReport(); return false;">Submit Problem Report</button>
             </form>
         </div>
         <div id="allReportsModule" class="modules">
