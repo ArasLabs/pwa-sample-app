@@ -20,10 +20,6 @@ function initialize() {
     let urlComponents = window.location.href.split('/');
     serverURL = urlComponents[0] + "//" + urlComponents[2] + "/" + urlComponents[3];
 
-    //Added here since location select2 dropdown is not rendered before this is called
-    setTimeout(initLocationService, 100);
-    //TODO have select2 created as the page loads then call initLocationService
-
     // Closes kebab dropdown menu when click elsewhere
     window.onclick = function (event) {
         if (!event.target.matches('.kebab') && !event.target.matches('.middle') && !event.target.matches('.edges')) {
@@ -45,7 +41,6 @@ function initialize() {
         }
     }
 
-    // No previous user found, showing login
     showLoginDialog();
 }
 
@@ -102,10 +97,13 @@ function showModule(moduleName) {
     document.getElementById("loader").style.display = "block";
 
     // Shows the module after a brief loading period
-    setTimeout(function () {
-        document.getElementById(moduleName).style.display = "block";
-        document.getElementById("loader").style.display = "none";
-    }, 500);
+    new Promise(function() {
+        setTimeout(function() {
+            document.getElementById(moduleName).style.display = "block";
+            document.getElementById("loader").style.display = "none";
+            initLocationService();
+        }, 100);
+    });
 }
 
 /**
@@ -531,7 +529,6 @@ function updateLocation() {
     var src = generateEmbedLocationLink(location);
     mapFrame.setAttribute("src", src);
 }
-
 
 function initLocationService() {
     var locationInputElement = document.getElementById('location');
