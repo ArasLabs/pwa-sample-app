@@ -122,6 +122,7 @@ Here's how you install a PWA on a Windows device using Google Chrome.
 
     ![location in Innovator form](./Screenshots/pr-in-innovator.png)
 
+>Note: If the map doesn't load, please check that you have added the API key as described in the **Mapbox API Key** section.
 
 ## Contributing
 

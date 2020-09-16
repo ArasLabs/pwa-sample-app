@@ -17,34 +17,39 @@
     } else {
         mapContainer.style.display = "block";
     }
-    
+
     let coordinates = locationString.split(',');
     let latitude = coordinates[0];
     let longitude = coordinates[1];
-    
+
     // set caption on map - that way location is displayed regardless of whether map works
     let mapCaption = document.getElementById("map-caption");
     let captionHtml = "<strong>Latitude:</strong> " + latitude + " <strong>Longitude:</strong> " + longitude;
     mapCaption.innerHTML = captionHtml;
-    
+
     // get token from Variable
     let tokenVariable = aras.newIOMItem("Variable","get");
     tokenVariable.setProperty("name","labs_MapToken");
     tokenVariable = tokenVariable.apply();
-    
+
     let token = tokenVariable.getProperty("value","");
     if (token === "") {
-        return alert("Bad token variable");
+        aras.AlertError("Mapbox access token is required. Please enter your token into labs_MapToken Variable value field.");
+        return;
     }
-    
+
     mapboxgl.accessToken = token;
-    
+
+    var startingPosition = [longitude, latitude]
+
     // initialize map
     var map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v11'
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: startingPosition,
+        zoom: 15
     });
-    
+
     // create load function to place location marker
     map.on('load', function() {
         map.loadImage('../javascript/MapboxGL/mapbox-icon.png', function(error, image) {
@@ -61,7 +66,7 @@
                             "type": "Feature",
                             "geometry": {
                                 "type": "Point",
-                                "coordinates": [longitude, latitude]
+                                "coordinates": startingPosition
                             }
                         }]
                     }
