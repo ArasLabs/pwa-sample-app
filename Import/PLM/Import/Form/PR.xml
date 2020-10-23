@@ -12,16 +12,18 @@
     <sort_order>128</sort_order>
     <source_id keyed_name="PR" type="Form">BECC5C22100641F2A96F2AFB8155A380</source_id>
     <Relationships>
-     <Item type="Field" id="21E52DBE2E914A3A8BCFC75AA3922EDF" action="add">
+    <Item type="Field" id="21E52DBE2E914A3A8BCFC75AA3922EDF" action="add">
       <border_width>0</border_width>
+      <container>location_map_box</container>
+      <display_length>500</display_length>
       <display_length_unit>px</display_length_unit>
-      <field_type>textarea</field_type>
+      <field_type>text</field_type>
       <font_color>#000000</font_color>
       <font_family>arial, helvetica, sans-serif</font_family>
       <font_size>8pt</font_size>
       <font_weight>bold</font_weight>
       <is_disabled>0</is_disabled>
-      <is_visible>0</is_visible>
+      <is_visible>1</is_visible>
       <label xml:lang="en">Location</label>
       <label_position>top</label_position>
       <list_no_blank>0</list_no_blank>
@@ -30,33 +32,118 @@
       <source_id keyed_name="12D89FDBF0EA46E9AEF77DD43DC64BE4" type="Body">12D89FDBF0EA46E9AEF77DD43DC64BE4</source_id>
       <tab_index>5760</tab_index>
       <tab_stop>1</tab_stop>
-      <x>661</x>
-      <y>10</y>
+      <x>0</x>
+      <y>0</y>
       <name>location</name>
      </Item>
-     <Item type="Field" id="97AFFF73D3734C4BAD455E72278C5AA8" action="add">
+     <Item type="Field" id="464C543322EE46E991889B3742A25426" action="add">
       <border_width>0</border_width>
+      <display_length_unit>px</display_length_unit>
+      <field_type>groupbox</field_type>
+      <font_color>#000000</font_color>
+      <font_family>arial, helvetica, sans-serif</font_family>
+      <font_size>8pt</font_size>
+      <font_weight>bold</font_weight>
+      <is_disabled>0</is_disabled>
+      <is_visible>1</is_visible>
+      <label_position>top</label_position>
+      <list_no_blank>0</list_no_blank>
+      <sort_order>3328</sort_order>
+      <source_id keyed_name="12D89FDBF0EA46E9AEF77DD43DC64BE4" type="Body">12D89FDBF0EA46E9AEF77DD43DC64BE4</source_id>
+      <tab_stop>1</tab_stop>
+      <x>610</x>
+      <y>10</y>
+      <name>location_map_box</name>
+     </Item>
+     <Item type="Field" id="B5477B1936114946853A3E18BAD918C9" action="add">
+      <border_width>0</border_width>
+      <container>location_map_box</container>
+      <css>{$this field rule} .map-container {
+  position: relative;
+  width: 400px;
+}
+
+{$this field rule} .map-label{
+  height: 20px;
+  font-weight: 600;
+}
+
+{$this field rule}  #map {
+  position: absolute;
+  top: 29px;
+  bottom: 0;
+  height: 300px;
+  width: 100%;
+}</css>
       <display_length_unit>px</display_length_unit>
       <field_type>html</field_type>
       <font_color>#000000</font_color>
       <font_family>arial, helvetica, sans-serif</font_family>
       <font_size>8pt</font_size>
       <font_weight>bold</font_weight>
-      <html_code><![CDATA[<link href=../javascript/MapboxGL/mapbox-gl.css' rel='stylesheet' />
-<div id='map' style='width: 400px; height: 300px;'></div>
-<address id='map-caption'></address>
+      <html_code><![CDATA[<div class="map-container">
+  <div class="map-label">Map</div>
+  <div id="map"></div>
+</div>
 ]]></html_code>
       <is_disabled>0</is_disabled>
       <is_visible>1</is_visible>
-      <label xml:lang="en">Location</label>
       <label_position>top</label_position>
       <list_no_blank>0</list_no_blank>
-      <sort_order>3072</sort_order>
+      <sort_order>3456</sort_order>
       <source_id keyed_name="12D89FDBF0EA46E9AEF77DD43DC64BE4" type="Body">12D89FDBF0EA46E9AEF77DD43DC64BE4</source_id>
       <tab_stop>1</tab_stop>
-      <x>661</x>
-      <y>10</y>
+      <x>0</x>
+      <y>50</y>
       <name>map</name>
+     </Item>
+     <Item type="Field" id="1E3165E274244B92AD0AF51CB960C071" action="add">
+      <border_width>0</border_width>
+      <display_length>114</display_length>
+      <display_length_unit>px</display_length_unit>
+      <field_type>item</field_type>
+      <font_color>#000000</font_color>
+      <font_family>arial, helvetica, sans-serif</font_family>
+      <font_size>8pt</font_size>
+      <font_weight>bold</font_weight>
+      <is_disabled>0</is_disabled>
+      <is_visible>1</is_visible>
+      <label xml:lang="en">Assigned Creator</label>
+      <label_position>top</label_position>
+      <list_no_blank>0</list_no_blank>
+      <sort_order>1152</sort_order>
+      <source_id keyed_name="12D89FDBF0EA46E9AEF77DD43DC64BE4" type="Body">12D89FDBF0EA46E9AEF77DD43DC64BE4</source_id>
+      <tab_index>80</tab_index>
+      <tab_stop>1</tab_stop>
+      <x>420</x>
+      <y>253</y>
+      <name>owned_by_id</name>
+     </Item>
+     <Item type="Field" id="6820242102B84BBCA4A17F144662EBFF" action="add">
+      <border_width>0</border_width>
+      <container>location_map_box</container>
+      <css />
+      <display_length_unit>px</display_length_unit>
+      <field_type>image</field_type>
+      <font_color>#000000</font_color>
+      <font_family>arial, helvetica, sans-serif</font_family>
+      <font_size>8pt</font_size>
+      <font_weight>bold</font_weight>
+      <height>100</height>
+      <is_disabled>0</is_disabled>
+      <is_visible>1</is_visible>
+      <label xml:lang="en">Thumbnail</label>
+      <label_position>top</label_position>
+      <list_no_blank>0</list_no_blank>
+      <propertytype_id keyed_name="thumbnail" type="Property">F920E0656B594844AF66CE359B03D6FC</propertytype_id>
+      <sort_order>3200</sort_order>
+      <source_id keyed_name="12D89FDBF0EA46E9AEF77DD43DC64BE4" type="Body">12D89FDBF0EA46E9AEF77DD43DC64BE4</source_id>
+      <tab_index>5888</tab_index>
+      <tab_stop>1</tab_stop>
+      <width>100</width>
+      <x>0</x>
+      <y>360</y>
+      <name>thumbnail</name>
      </Item>
     </Relationships>
    </Item>

@@ -1,0 +1,111 @@
+﻿<AML>
+ <Item type="Method" id="F0F93E6EF88A4B16A1D90C180E565E68" action="add">
+  <execution_allowed_to keyed_name="World" type="Identity">A73B655731924CD0B027E4F4D5FCC0A9</execution_allowed_to>
+  <method_code><![CDATA[innovator = this.newInnovator();
+
+			var thumbnail = this.getProperty("thumbnail", string.Empty);
+			var tempFolderPath = CCO.Server.MapPath("TEMP");
+
+			if(!string.IsNullOrEmpty(thumbnail)) {
+				return this;
+			}
+
+			try
+			{
+				var fileItem = GetThumbnailItem(this, tempFolderPath);
+				if(fileItem.isError()) {
+					return fileItem;
+				}
+
+				this.setProperty("thumbnail", string.Format(CultureInfo.CurrentCulture, "vault:///?fileId={0}", fileItem.getID()));    
+				return this;
+			}
+			catch (Exception e)
+			{
+				return innovator.newError(e.Message);
+			}
+			finally
+			{
+				if (isLoadThumbnail)
+				{
+					File.Delete(filePath);
+				}
+			}
+		}
+
+		Innovator innovator;
+		Boolean isLoadThumbnail = false;
+		String filePath = string.Empty;
+
+		private Item GetThumbnailItem(Item item, string filePath) {
+			if (item.dom.SelectSingleNode("./Item/Relationships/Item[@type='PR File']") == null) {
+
+				var definition = new { longitude = string.Empty, latitude = string.Empty };
+				var coordinatesJSON = item.getProperty("coordinates", "");
+				var coordinates = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(coordinatesJSON, definition);
+
+				if (coordinates == null)
+				{
+					return innovator.newError("Incorrect coordinates.");
+				}
+
+				return UploadLocationThumbnail(coordinates.longitude, coordinates.latitude, filePath);
+			}
+			else {
+				var prFileRelationship = item.getRelationships("PR File");
+
+				var fileRelation = prFileRelationship.getItemByIndex(0);
+				var fileID = fileRelation.getRelatedItemID();
+
+				// <related_id>	<Item type="File" .../></related_id> OR <related_id> String ID </related_id>
+				var fileItem = innovator.newItem("File");
+				fileItem.setID(fileID);
+
+				return fileItem;
+			}
+		}
+
+		private Item UploadLocationThumbnail(string longitude, string latitude, string tempFolderPath)
+		{
+			var fileName = string.Format(CultureInfo.CurrentCulture, "location_thumbnail_{0}_{1}.JPEG", longitude, latitude);
+			var locationThumbnailURL = string.Format(CultureInfo.CurrentCulture
+			, "https://api.mapbox.com/styles/v1/mapbox/{0}/static/pin-s+4668F2({1},{2})/{1},{2},{3}/{4}x{5}?access_token={6}"
+				, "streets-v11"     //default map style
+				, longitude
+				, latitude
+				, 16                //default zoom
+				, 400               //default width
+				, 300               //default height
+				, GetMapAccessToken()
+			);
+
+			filePath = Path.Combine(tempFolderPath, fileName);
+			var client = new WebClient();
+			client.DownloadFile(locationThumbnailURL, filePath);
+			Item file = innovator.newItem("File", "add");
+			file.setProperty("filename", fileName);
+
+			file.attachPhysicalFile(filePath);
+			file = file.apply();
+
+			if(file.isError()) {
+				return innovator.newError("Error creating thumbnail: " + file.getErrorString());
+			}
+
+			isLoadThumbnail = true;
+			return file;
+		}
+
+		private string GetMapAccessToken() {
+			// get token from Variable
+			var tokenVariable = innovator.getItemByKeyedName("Variable", "labs_MapToken");
+
+			return tokenVariable.getProperty("value", string.Empty);
+		}
+
+		private void DummyMethod()
+		{]]></method_code>
+  <method_type>C#</method_type>
+  <name>labs_addPRThumbnail</name>
+ </Item>
+</AML>

@@ -81,15 +81,32 @@ body {
   color: black;
 }
 
+.loader-background {
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.4);
+  position: absolute;
+}
+
 .loader {
+  display: none;
+  z-index: 7;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.spinner {
   left: 50%;
   top: 50%;
-  position: fixed;
+  position: absolute;
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
 
-.loader #spinner {
+.loader #spinner_circle {
+  z-index: 10;
   box-sizing: border-box;
   stroke: #673AB7;
   stroke-width: 3px;
@@ -200,7 +217,7 @@ select:invalid {
   color: darkgrey;
 }
 
-button {
+.button {
   background-color: #3F51B5;
   color: white;
   padding: 14px 20px;
@@ -210,7 +227,7 @@ button {
   width: 100%;
 }
 
-button:hover {
+.button:hover {
   opacity: 0.8;
 }
 
@@ -393,13 +410,68 @@ span.psw {
   background: white;
   display: inline-block;
   border: 1px solid #ccc;
-  width: 100%;
   padding: 12px 20px;
-  margin: 8px 0;
+  width: 100%;
+  height: 100px;
 }
 
 .card h3 {
   margin: 0;
   margin-block-end: 0;
   margin-block-start: 0;
+}
+
+.map_pr {
+  height: 230px;
+  background-color: grey;
+  text-align: center;
+  color: white;
+  font-weight: 700;
+  line-height: 230px;
+}
+
+.card-block {
+  padding: 1px;
+  width: 100%;
+  height: 330px;
+  margin-top: 10px;
+  float: left;
+}
+
+#allReportsModule {
+ display: table !important;
+ clear: both;
+ width: 100%;
+}
+
+@media (min-width: 767px) {
+  .card-block {
+    padding: 3px;
+    width: 50%;
+  }
+
+}
+@media (min-width: 992px) {
+  .card-block {
+    padding: 5px;
+    width: 33.33333%;
+  }
+}
+@media (min-width: 1200px) {
+  .card-block {
+    width: 25%;
+    padding: 7px;
+  }
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.card_img {
+  width: 100%;
+  height: 100%;
 }

@@ -2,6 +2,24 @@
  <Item type="ItemType" id="881803D90C0B4F98A49A4732C16277F2" action="add">
   <name>PR</name>
   <Relationships>
+   <Item type="Property" id="A863B6524B5E4697ADCAC81E75B7211B" action="add">
+    <column_alignment>left</column_alignment>
+    <data_type>string</data_type>
+    <is_hidden>1</is_hidden>
+    <is_hidden2>1</is_hidden2>
+    <is_indexed>0</is_indexed>
+    <is_keyed>0</is_keyed>
+    <is_multi_valued>0</is_multi_valued>
+    <is_required>0</is_required>
+    <label xml:lang="en">coordinates</label>
+    <range_inclusive>0</range_inclusive>
+    <readonly>0</readonly>
+    <sort_order>6016</sort_order>
+    <source_id keyed_name="PR" type="ItemType" name="PR">881803D90C0B4F98A49A4732C16277F2</source_id>
+    <stored_length>64</stored_length>
+    <track_history>0</track_history>
+    <name>coordinates</name>
+   </Item>
    <Item type="Property" id="6CBCF2DCDCCD4E999C8EB7698961FF59" action="add">
     <column_alignment>left</column_alignment>
     <data_type>string</data_type>
@@ -19,6 +37,47 @@
     <stored_length>128</stored_length>
     <track_history>0</track_history>
     <name>location</name>
+   </Item>
+   <Item type="Property" id="F920E0656B594844AF66CE359B03D6FC" action="add">
+    <column_alignment>left</column_alignment>
+    <data_type>image</data_type>
+    <is_hidden>0</is_hidden>
+    <is_hidden2>0</is_hidden2>
+    <is_indexed>0</is_indexed>
+    <is_keyed>0</is_keyed>
+    <is_multi_valued>0</is_multi_valued>
+    <is_required>0</is_required>
+    <label xml:lang="en">thumbnail</label>
+    <range_inclusive>0</range_inclusive>
+    <readonly>0</readonly>
+    <sort_order>5888</sort_order>
+    <source_id keyed_name="PR" type="ItemType" name="PR">881803D90C0B4F98A49A4732C16277F2</source_id>
+    <track_history>0</track_history>
+    <name>thumbnail</name>
+   </Item>
+   <Item type="Server Event" id="575727D4E93141D3B29DC216166FB264" action="add">
+    <event_version>version_1</event_version>
+    <is_required>0</is_required>
+    <related_id keyed_name="labs_addPRThumbnail" type="Method">
+     <Item type="Method" action="get" select="id">
+      <name>labs_addPRThumbnail</name>
+     </Item>
+    </related_id>
+    <server_event>onBeforeAdd</server_event>
+    <sort_order>128</sort_order>
+    <source_id keyed_name="PR" type="ItemType" name="PR">881803D90C0B4F98A49A4732C16277F2</source_id>
+   </Item>
+   <Item type="Server Event" id="9F476A4DA5D14BAA91A3AE8D63D26C54" action="add">
+    <event_version>version_1</event_version>
+    <is_required>0</is_required>
+    <related_id keyed_name="labs_addPRThumbnail" type="Method">
+     <Item type="Method" action="get" select="id">
+      <name>labs_addPRThumbnail</name>
+     </Item>
+    </related_id>
+    <server_event>onBeforeUpdate</server_event>
+    <sort_order>256</sort_order>
+    <source_id keyed_name="PR" type="ItemType" name="PR">881803D90C0B4F98A49A4732C16277F2</source_id>
    </Item>
   </Relationships>
  </Item>

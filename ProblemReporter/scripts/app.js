@@ -1,9 +1,13 @@
 var serverURL = null;
-var oauthToken = null;
 var database = null;
 var clientID = "ProblemReporter";
 var username = null;
 var userID = null;
+var map = null;
+var mapMarker = null;
+var mapGeocoder = null;
+var defaultVaultId = "67BBB9204FE84A8981ED8313049BA06C"
+var requestMng = null;
 
 /**
  * Initializes the main page
@@ -19,14 +23,13 @@ function initialize() {
     document.getElementById("problemDate").value = today;
     let urlComponents = window.location.href.split('/');
     serverURL = urlComponents[0] + "//" + urlComponents[2] + "/" + urlComponents[3];
+    requestMng = requestManager(serverURL)
 
     window.onclick = function (event) {
         if (!event.target.matches('#navButton') && event.target.getAttribute("id") !== 'fa fa-bars') {
             closeNav();
         }
     };
-
-    initLocationService();
 
     // Checking if there is local storage
     if (window.localStorage) {
@@ -64,20 +67,28 @@ function closeNav() {
  * Populates the database select field from the xml database list
  * @param {*} databaseList The list of databases from the server
  */
-function populateDatabaseList(databaseList) {
-    let databaseField = document.getElementById("database");
-    let databases = getXMLElementsFromXmlHttpResponse(databaseList, "DB");
+function populateDatabaseList() {
+    var databaseField = document.getElementById("database");
 
-    // if the url is a valid innovator instance, add the databases to the dropdown
-    if (databases.length > 0) {
-        for (let i = 0; i < databases.length; i++) {
-            let database = databases[i];
-            let option = document.createElement("option");
-            option.text = database.id;
-            databaseField.add(option);
+    requestMng.httpGet("/Server/DBList.aspx").then(dbListResponse => {
+        var domParser = new DOMParser();
+        var xmlDoc = domParser.parseFromString(
+            dbListResponse.data,
+            "text/xml"
+        );
+
+        var dbElements = [...xmlDoc.getElementsByTagName("DB")];
+
+        if (dbElements.length > 0) {
+            dbElements.forEach((element) => {
+                let option = document.createElement("option");
+                option.text = element.id;
+                databaseField.add(option);
+            });
+
+            databaseField.selectedIndex = 1;
         }
-        databaseField.selectedIndex = 1;
-    }
+    });
 }
 
 /**
@@ -89,7 +100,7 @@ function showLoginDialog() {
     document.getElementById("loginDialog").style.display = "inline";
 
     // Populating the Database List
-    createXmlHttpRequest(serverURL + "/Server/DBList.aspx", populateDatabaseList);
+    populateDatabaseList()
 }
 
 /**
@@ -105,7 +116,7 @@ function showModule(moduleName) {
     // Shows the module after a brief loading period
     setTimeout(function () {
         document.getElementById(moduleName).style.display = "block";
-        document.getElementById("loader").style.display = "none";
+        document.getElementById("loader").style.cssText = "display: none !important";
     }, 500);
 }
 
@@ -114,7 +125,7 @@ function showModule(moduleName) {
  */
 function hideAllModules() {
     for (var i = 0; i < document.getElementsByClassName("modules").length; i++) {
-        document.getElementsByClassName("modules")[i].style.display = "none";
+        document.getElementsByClassName("modules")[i].style.cssText = "display: none !important";
     }
 }
 
@@ -142,11 +153,8 @@ function loginFromUI() {
  * @param {*} rememberMe
  */
 function login(password, rememberMe) {
-    // attempting login
-    var afterLogin = oauthLogin(serverURL, database, username, password, clientID);
-
-    afterLogin.then(function (token) {
-        oauthToken = token;
+    return oauthLogin(serverURL, database, username, password, clientID).then(function (token) {
+        requestMng.instance.defaults.headers.common["Authorization"] = 'Bearer ' + token;
         document.getElementById("loginDialog").style.display = "none";
 
         if (userID === null) {
@@ -162,6 +170,8 @@ function login(password, rememberMe) {
             window.localStorage.setItem("password", password);
             window.localStorage.setItem("userID", userID);
         }
+
+        initLocationService();
     }).catch(function () {
         //TODO: Implement better error page
         alert("Invalid credentials. Please try again");
@@ -177,6 +187,7 @@ function login(password, rememberMe) {
 function signOut() {
     // Clearing the saved credentials
     window.localStorage.clear();
+    requestMng.instance.defaults.headers.common["Authorization"] = ''
 
     // Clearing input fields
     document.getElementById("title").value = "";
@@ -210,211 +221,70 @@ function getImage() {
 }
 
 /**
- * Get's the user's location and logs it to the console
- */
-function getLocation() {
-    return new Promise(function (resolve) {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(resolve, resolve);
-        } else {
-            console.error("Geolocation is not supported by this browser.");
-            resolve(null);
-        };
-    }).then(function (position) {
-        if (position !== null && position !== undefined && position.code !== 1) {
-            return position.coords.latitude + "," + position.coords.longitude;
-        }
-        return null;
-    });
-}
-
-/**
  * Get's the user's input from the server and submits the report
  */
 function submitReport() {
-    let reportURL = serverURL + "/Server/OData/PR";
-    let reportFileURL = serverURL + "/Server/OData/PR File";
+    var location = (mapGeocoder.mapMarker || mapMarker).getLngLat(),
+        longitude = location.lng,
+        latitude = location.lat;
 
+    document.getElementById("loader").style.display = "block";
+    return new Promise(function (resolve) {
+        var image = getImage()
+        if (image) {
+            resolve(uploadImage(image))
+            console.log("Related File was successfully created!")
+        } else {
+            resolve()
+        }
+    }).then(fileId => {
+        var prRequestBody = buildRequestBody()
+        prRequestBody.coordinates = JSON.stringify({ longitude, latitude });
+        if (fileId) {
+            prRequestBody["PR File"] = [{ "related_id@odata.bind": "File('" + fileId + "')" }]
+        }
+
+        return requestMng.httpPost("/Server/OData/PR", prRequestBody)
+            .then(reportResp => {
+                console.log("PR item successfully created!")
+                alert("Report " + problemReport.item_number + " was created successfully!")
+                    document.getElementById("loader").style.cssText = "display: none !important";
+            }).catch(e => {
+                console.log(e)
+                document.getElementById("loader").style.cssText = "display: none !important";
+            });;
+    });
+}
+
+function buildRequestBody() {
     // getting the form info
     var title = document.getElementById("title").value;
     var description = document.getElementById("description").value;
     var problemDate = document.getElementById("problemDate").value;
-    var location = document.getElementById("location").value;
-    var image = getImage();
 
-    return new Promise(function (resolve, reject) {
+    var location = document.getElementById("locationStr").textContent;
 
-        if (image !== null && image !== undefined) {
-            var uploadImageId = uploadImage(image);
-            resolve(uploadImageId);
-        }
-        else {
-            resolve(null);
-        }
+    // set body of request using form data
+    let body = {};
+    body["reported_by"] = userID;
 
-    }).then(function (fileID) {
-
-        // Creating the POST request to make a new report
-        var createReportRequest = new XMLHttpRequest();
-        createReportRequest.open("POST", reportURL);
-        createReportRequest.setRequestHeader("Authorization", "Bearer " + oauthToken);
-
-        // set body of request using form data
-        let body = {};
-        body["reported_by"] = userID;
-
-        if (title !== "") {
-            body["title"] = title;
-        }
-
-        if (description !== "") {
-            body["description"] = description;
-        }
-
-        if (problemDate !== "") {
-            body["problemDate"] = problemDate;
-        }
-
-        if (location !== null) {
-            body["location"] = location;
-        }
-
-        body = JSON.stringify(body);
-
-        createReportRequest.send(body);
-        createReportRequest.onreadystatechange = function () {
-            if (createReportRequest.readyState == 4 && createReportRequest.status == 201) {
-                console.log("createReportRequest : " + createReportRequest.responseText)
-                var createReportResponse = JSON.parse(createReportRequest.responseText);
-                var reportNumber = createReportResponse.item_number;
-                var reportId = createReportResponse.id;
-
-                //add file image to the relationship 
-                if (fileID != null) {
-                    var addFileToReportRequest = new XMLHttpRequest();
-                    addFileToReportRequest.open("POST", reportFileURL);
-                    addFileToReportRequest.setRequestHeader("Authorization", "Bearer " + oauthToken);
-
-                    // set body of request using form data
-                    var relationshipBody = JSON.stringify({
-                        source_id: reportId,
-                        related_id: fileID
-                    });
-
-                    addFileToReportRequest.send(relationshipBody);
-                    addFileToReportRequest.onreadystatechange = function () {
-                        if (addFileToReportRequest.readyState == 4 && addFileToReportRequest.status == 201) {
-                            alert("Report " + reportNumber + " was created successfully!");
-                        }
-                    }
-                }
-                else {
-                    alert("Report " + reportNumber + " was created successfully!");
-                }
-            }
-        }
-    });
-}
-
-/**
- * Uploads the problem image to the server
- * Returns the id of the created file
- * @param {*} image the image to be uploaded
- */
-function uploadImage(image) {
-    // Split our file into content chunks
-    var chunkSize = 4096;
-
-    // Starting the transaction by getting a tansaction ID
-    return httpPost(oauthToken, serverURL + "/vault/odata/vault.BeginTransaction")
-        .then(function (transactionResponse) {
-            var transactionID = JSON.parse(transactionResponse.responseText.toString()).transactionId;
-            return uploadFileInChunks(chunkSize, image, transactionID)
-                .then(function (imageId) {
-                    return imageId;
-                })
-        }).catch(function () {
-            alert("Unable to connect to server");
-        });
-}
-
-function uploadFileInChunks(chunkSize, file, transactionID) {
-    // Build our blob array
-    var fileID = generateNewGuid().split('-').join('').toUpperCase();
-
-    // Split our file into content chunks
-    var chunkUploadPromiseArray = new Array();
-    var chunkUploadAttempts = 5;
-    var i = 0;
-    chunkSize = file.size;
-    while (i < file.size) {
-        var endChunkSize = i + chunkSize;
-        endChunkSize = (endChunkSize < file.size) ? endChunkSize : file.size;
-        endChunkSize = endChunkSize - 1;
-        var chunkBlob = file.slice(i, (endChunkSize + 1));
-
-        var headers = [];
-        headers.push({
-            name: "Content-Disposition",
-            value: "attachment; filename*=utf-8''" + encodeURI(file.name)
-        });
-        headers.push({
-            name: "Content-Range",
-            value: "bytes " + i + "-" + endChunkSize + "/" + file.size
-        });
-        headers.push({
-            name: "Content-Type",
-            value: "application/octet-stream"
-        });
-        headers.push({
-            name: "transactionid",
-            value: transactionID
-        });
-
-        var uploadUrl = serverURL + "/vault/odata/vault.UploadFile?fileId=" + fileID;
-        chunkUploadPromiseArray.push(guaranteedHttpPost(oauthToken, uploadUrl, headers, chunkBlob, chunkUploadAttempts));
-
-        i = endChunkSize + 1;
+    if (title !== "") {
+        body["title"] = title;
     }
 
-    return Promise.all(chunkUploadPromiseArray).then(function (values) {
+    if (description !== "") {
+        body["description"] = description;
+    }
 
-        var boundary = "batch_" + fileID;
-        var commit_headers = [];
-        commit_headers.push({
-            name: "Content-Type",
-            value: "multipart/mixed; boundary=" + boundary
-        });
-        commit_headers.push({
-            name: "transactionid",
-            value: transactionID
-        });
+    if (problemDate !== "") {
+        body["problemDate"] = problemDate;
+    }
 
-        var commit_body = "--";
-        commit_body += boundary + "\r\n";
-        commit_body += "Content-Type: application/http\r\n\r\n";
-        commit_body += "POST " + serverURL + "/Server/odata/File HTTP/1.1\r\n";
-        commit_body += "Content-Type: application/json\r\n\r\n";
-        commit_body += '{"id":"' + fileID + '",';
-        commit_body += '"filename":"' + file.name + '",';
-        commit_body += '"file_size":' + file.size + ',';
-        commit_body += '"Located":[{"file_version":1,"related_id":"67BBB9204FE84A8981ED8313049BA06C"}]}\r\n';
-        commit_body += "--" + boundary + "--";
+    if (location !== null) {
+        body["location"] = location;
+    }
 
-        return guaranteedHttpPost(oauthToken, serverURL + "/vault/odata/vault.CommitTransaction", commit_headers, commit_body, 5)
-            .then(function (fileUploadResponse) {
-                console.log("commit response : " + fileUploadResponse.responseText.toString());
-                var startIndex = fileUploadResponse.responseText.indexOf("{");
-                var endIndex = fileUploadResponse.responseText.lastIndexOf("}") + 1;
-                var jsonResponse = fileUploadResponse.responseText.substring(startIndex, endIndex);
-                return JSON.parse(jsonResponse).id;
-            })
-            .catch(function (err) {
-                console.log("Error in uploadFileInChunks promise : Unable to connect to server");
-                alert("Unable to connect to server");
-            });
-
-    });
+    return body
 }
 
 /**
@@ -427,52 +297,90 @@ function showUserReports() {
         module.removeChild(module.firstChild);
     }
 
-    var request = httpGet(oauthToken, serverURL + "/server/odata/PR?$filter=reported_by eq '" + userID + "'");
-    request.then(function (response) {
-        var responseBody = JSON.parse(response.responseText).value;
+    return requestMng.httpGet("/server/odata/PR?$filter=reported_by eq '" + userID + "'")
+        .then(function (response) {
+            var prItems = response.data.value
+            // looping through the response to create a card for each response
 
-        // looping through the response to create a card for each response
-        for (var i = 0; i < responseBody.length; i++) {
-            var card = document.createElement("div");
-            card.classList.add("card");
-            var problemReport = responseBody[i];
-            var styleNode = document.createElement("h3");
-            var textNode = document.createTextNode(problemReport.item_number);
-            styleNode.appendChild(textNode);
-            card.appendChild(styleNode);
-            card.appendChild(document.createTextNode(problemReport.title));
-            card.appendChild(document.createElement("br"));
+            var fileIds = []
+            var targetStr = "fileId=";
 
-            if (problemReport.location !== undefined && problemReport.location !== null && problemReport.location.length !== 0) {
-                var locationLink = document.createElement("a");
-                locationLink.innerText = problemReport.location;
-                locationLink.setAttribute("href", generateLocationLink(problemReport.location));
-                locationLink.setAttribute("target", "_blank");
-                card.appendChild(locationLink);
+            for (var i = 0; i < prItems.length; i++) {
+
+                var cardBlock = document.createElement("div");
+                cardBlock.classList.add("card-block");
+                var card = document.createElement("div");
+                card.classList.add("card");
+                var problemReport = prItems[i];
+                var styleNode = document.createElement("h3");
+                var textNode = document.createTextNode(problemReport.item_number);
+                styleNode.appendChild(textNode);
+                card.appendChild(styleNode);
+                card.appendChild(document.createTextNode(problemReport.title));
+                card.appendChild(document.createElement("br"));
+
+                if (problemReport.location) {
+                    var location = document.createElement("div");
+                    location.classList.add("ellipsis");
+                    location.innerText = problemReport.location;
+                    card.appendChild(location);
+                }
+
+                styleNode = document.createElement("div");
+                textNode = document.createTextNode(problemReport.state);
+                styleNode.appendChild(textNode);
+
+                // Coloring the different statuses
+                if (problemReport.state === "Submitted") {
+                    styleNode.style.color = "grey";
+                } else if (problemReport.state === "Closed") {
+                    styleNode.style.color = "green";
+                } else if (problemReport.state === "Rejected") {
+                    styleNode.style.color = "red";
+                } else {
+                    styleNode.style.color = "orange";
+                }
+                card.appendChild(styleNode);
+
+                var map = document.createElement("div");
+                map.classList.add("map_pr");
+
+                if (problemReport.thumbnail) {
+                    var index = problemReport.thumbnail.indexOf(targetStr);
+                    var fileId = problemReport.thumbnail.substring(index + targetStr.length);
+                    fileIds.push(fileId)
+
+                    var locationThumbnail = document.createElement("img");
+                    locationThumbnail.classList.add("card_img");
+                    locationThumbnail.id = fileId
+                    map.appendChild(locationThumbnail)
+                } else {
+                    map.textContent = "No thumbnail"
+                }
+
+                cardBlock.appendChild(card);
+                cardBlock.appendChild(map);
+                module.appendChild(cardBlock);
+
+                //initUserReportMaps(map.id,)
             }
-
-            styleNode = document.createElement("div");
-            textNode = document.createTextNode(problemReport.state);
-            styleNode.appendChild(textNode);
-
-            // Coloring the different statuses
-            if (problemReport.state === "Submitted") {
-                styleNode.style.color = "grey";
-            } else if (problemReport.state === "Closed") {
-                styleNode.style.color = "green";
-            } else if (problemReport.state === "Rejected") {
-                styleNode.style.color = "red";
-            } else {
-                styleNode.style.color = "orange";
-            }
-            card.appendChild(styleNode);
-
-            module.appendChild(card);
-        }
-    })
-        .catch(function () {
+            loadLocationThumbnails(fileIds)
+        }).catch(function () {
             alert("Unable to connect to server");
         });
+}
+
+function loadLocationThumbnails(fileIds) {
+    getFilesUrls(fileIds).then(files => {
+        if (files && files.length > 0) {
+            files.forEach(file => {
+                var imageEl = document.getElementById(file.fileId)
+                imageEl.setAttribute('alt', file.name)
+                imageEl.src = file.url
+            })
+        }
+
+    })
 }
 
 /**
@@ -480,13 +388,13 @@ function showUserReports() {
  */
 function getUserID() {
     let rememberMe = document.getElementById("rememberMe").value;
-    var request = httpGet(oauthToken, serverURL + "/server/odata/Alias?$expand=related_id&$filter=source_id/login_name eq '" + username + "'");
-    request.then(function (response) {
-        userID = JSON.parse(response.responseText.toString()).value[0].related_id.id;
-        if (rememberMe && window.localStorage) {
-            window.localStorage.setItem("userID", userID);
-        }
-    })
+    return requestMng.httpGet("/server/odata/Alias?$expand=related_id($select=id)&$filter=source_id/login_name eq '" + username + "'&$select=id")
+        .then(function (response) {
+            userID = response.data.value[0].related_id.id;
+            if (rememberMe && window.localStorage) {
+                window.localStorage.setItem("userID", userID);
+            }
+        })
         .catch(function () {
             //TODO: Implement better error page
             alert("Username not found");
@@ -510,36 +418,308 @@ function generateNewGuid() {
     return 'xxxxxxxxxxxx4xxx8xxxxxxxxxxxxxxx'.replace(/x/g, randomDigit).toUpperCase();
 }
 
-function generateLocationLink(location) {
-    const googleMapsEmbedLink = "https://maps.google.com/maps?t=&ie=UTF8&iwloc=";
+function uploadImage(image) {
+    // Split our file into content chunks
+    var chunkSize = 4096;
 
-    if (location === null || location === undefined || location.length == 0) {
-        return googleMapsEmbedLink;
+    // Starting the transaction by getting a tansaction ID
+    return requestMng.httpPost("/vault/odata/vault.BeginTransaction", {}, {
+        headers: { "VAULTID": defaultVaultId }
+    }).then(function (transactionResponse) {
+        var transactionID = transactionResponse.data.transactionId;
+        return uploadFileInChunks(chunkSize, image, transactionID)
+            .then(function (imageId) {
+                return imageId;
+            })
+    }).catch(function (e) {
+        console.log(e)
+        alert("Unable to connect to server");
+    });
+}
+
+function uploadFileInChunks(chunkSize, file, transactionID) {
+    // Build our blob array
+    var fileID = generateNewGuid().split('-').join('').toUpperCase();
+
+    // Split our file into content chunks
+    var chunkUploadPromiseArray = new Array();
+    //var chunkUploadAttempts = 5;
+    var i = 0;
+    chunkSize = file.size;
+    while (i < file.size) {
+        var endChunkSize = i + chunkSize;
+        endChunkSize = (endChunkSize < file.size) ? endChunkSize : file.size;
+        endChunkSize = endChunkSize - 1;
+        var chunkBlob = file.slice(i, (endChunkSize + 1));
+
+        chunkUploadPromiseArray.push(
+            requestMng.httpPost("/vault/odata/vault.UploadFile?fileId=" + fileID, chunkBlob, {
+                headers: {
+                    "Content-Disposition": "attachment; filename*=utf-8''" + encodeURI(file.name),
+                    "Content-Range": "bytes " + i + "-" + endChunkSize + "/" + file.size,
+                    "Content-Type": "application/octet-stream",
+                    "VAULTID": defaultVaultId,
+                    "transactionid": transactionID
+                }
+            })
+        )
+        i = endChunkSize + 1;
     }
 
-    return googleMapsEmbedLink + "&q=" + encodeURI(location);
+    return Promise.all(chunkUploadPromiseArray).then(function (values) {
+        var boundary = "batch_" + fileID;
+        var commit_body = "--";
+        commit_body += boundary + "\r\n";
+        commit_body += "Content-Type: application/http\r\n\r\n";
+        commit_body += "POST " + serverURL + "/Server/odata/File HTTP/1.1\r\n";
+        commit_body += "Content-Type: application/json\r\n\r\n";
+        commit_body += '{"id":"' + fileID + '",';
+        commit_body += '"filename":"' + file.name + '",';
+        commit_body += '"file_size":' + file.size + ',';
+        commit_body += '"Located":[{"file_version":1,"related_id":"' + defaultVaultId + '"}]}\r\n';
+        commit_body += "--" + boundary + "--";
+
+        return requestMng.httpPost("/vault/odata/vault.CommitTransaction", commit_body, {
+            headers: {
+                "VAULTID": defaultVaultId,
+                "Content-Type": "multipart/mixed; boundary=" + boundary,
+                "transactionid": transactionID
+            }
+        }).then(function (fileUploadResponse) {
+            console.log("commit response : " + fileUploadResponse.toString());
+            var startIndex = fileUploadResponse.data.indexOf("{");
+            var endIndex = fileUploadResponse.data.lastIndexOf("}") + 1;
+            var jsonResponse = fileUploadResponse.data.substring(startIndex, endIndex);
+            return JSON.parse(jsonResponse).id;
+        })
+            .catch(function (err) {
+                console.log("Error in uploadFileInChunks promise : Unable to connect to server");
+                alert("Unable to connect to server");
+            });
+
+    });
 }
 
-function generateEmbedLocationLink(location) {
-    return generateLocationLink(location) + "&output=embed";
+function getFilesUrls(fileIds) {
+    var data = {
+        idList: `'${fileIds.join("','")}'`
+    }
+
+    return requestMng.httpPost("/server/odata/method.labs_getFileLocated", data)
+        .then(function (filesWithLocation) {
+            if (!filesWithLocation || !filesWithLocation.data || !filesWithLocation.data.Item) {
+                console.log(`"files with location", idList: ${fileIds.join(",")} was not found.`);
+                return;
+            }
+
+            let items = [];
+            var filesLocated = filesWithLocation.data.Item;
+            var filesLocatedToFile = item => ({
+                fileId: item["@aras.id"],
+                vaultId: item.Relationships.Item.related_id.Item["@aras.id"],
+                fileName: item.filename
+            });
+
+            if (filesLocated instanceof Array) {
+                items = filesLocated.map(filesLocatedToFile);
+            } else if (filesLocated instanceof Object) {
+                items = [filesLocatedToFile(filesLocated)];
+            }
+
+            return Promise.all(
+                items.map(fileItem =>
+                    Promise.resolve(requestMng.httpPost("/server/AuthenticationBroker.asmx/GetFileDownloadToken?rnd=" + Math.random(), {
+                        param: { fileId: fileItem.fileId }
+                    })).then(
+                        value => ({ status: 'fulfilled', item: fileItem, value: value })
+                        , reason => ({ status: 'rejected', item: fileItem, reason: reason })
+                    )
+                )).then(results => {
+                    var files = [];
+
+                    results.forEach(result => {
+
+                        if (result.status == "fulfilled") {
+                            if (!result.value || !result.value.data || !result.value.data.d) {
+                                console.log(
+                                    `Toket for file with name: ${result.item.fileName} id: ${result.item.fileId} was not found`
+                                )
+                                return
+                            }
+                            const fileToken = result.value.data.d;
+
+                            let imageUrl =
+                                serverURL +
+                                "/vault/vaultserver.aspx" +
+                                "?dbName=" + database +
+                                "&fileId=" + result.item.fileId +
+                                "&fileName=" + result.item.fileName +
+                                "&vaultId=" + result.item.vaultId +
+                                "&token=" + fileToken;
+
+                            files.push({
+                                name: result.item.fileName,
+                                fileId: result.item.fileId,
+                                url: imageUrl
+                            })
+                        }
+                        if (result.status == "rejected") {
+                            console.log(`FileToken for file with id ${result.item.fileId} was not found`, result.reason)
+                        }
+                    })
+
+                    return files;
+                });
+        });
 }
-
-
-function updateLocation() {
-    var mapFrame = document.getElementById("gmap");
-    var location = document.getElementById('location').value;
-    var src = generateEmbedLocationLink(location);
-    mapFrame.setAttribute("src", src);
-}
-
 
 function initLocationService() {
-    var locationInputElement = document.getElementById('location');
-    locationInputElement.addEventListener("input", updateLocation);
-    locationInputElement.addEventListener("change", updateLocation);
-    getLocation().then(function (coordinates) {
-        //TODO convert coordinates to address using google api. 
-        locationInputElement.value = encodeURI(coordinates);
-        updateLocation();
-    })
+    requestMng.httpGet("/server/odata/Variable?$filter=name eq 'labs_MapToken'&$select=value,default_value").then(res => {
+        console.log(res)
+        if(!res || !res.data || !res.data.value || res.data.value.length <= 0)
+            return
+
+        var mapToken = res.data.value[0]
+
+        mapboxgl.accessToken = mapToken.value || value.default_value
+        if (!mapboxgl.supported()) {
+            alert('Your browser does not support Mapbox GL');
+        } else {
+
+            getCurrentLocation().then((location) => {
+                let startingPosition = [location.longitude, location.latitude]
+                map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: startingPosition,
+                    zoom: 16
+                });
+
+                mapMarker = new mapboxgl.Marker({ color: "#4668F2" }).setLngLat(startingPosition).addTo(map);
+                mapGeocoder = new MapboxGeocoder({
+                    accessToken: mapboxgl.accessToken,
+                    localGeocoder: coordinatesGeocoder,
+                    mapboxgl: mapboxgl,
+                    zoom: map.getZoom()
+                })
+
+                document.getElementById('geocoder').appendChild(mapGeocoder.onAdd(map));
+                map.on('load', () => {
+                    reverseGeocodingRequest(location.longitude, location.latitude).then(res => {
+                        document.getElementById('locationStr').textContent = res
+                    })
+                    map.addSource('single-point', {
+                        type: 'geojson',
+                        data: {
+                            type: 'FeatureCollection',
+                            features: []
+                        }
+                    });
+
+
+                    setTimeout(() => map.resize(), 100)
+
+                    mapGeocoder.on('result', function (e) {
+                        var result = e.result
+                        map.getSource('single-point').setData(result.geometry);
+
+                        var locationStrField = document.getElementById('locationStr')
+
+                        if (!Object.prototype.hasOwnProperty.call(result, "id")) {
+                            reverseGeocodingRequest(result.center[0], result.center[1]).then(res => {
+                                locationStrField.textContent = res
+                            })
+                        } else {
+                            locationStrField.textContent = result.place_name
+                        }
+                    })
+                });
+            })
+        }
+    });
 }
+
+function getCurrentLocation() {
+    return new Promise(function (resolve, rejected) {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(resolve, rejected);
+        } else {
+            console.error("Geolocation is not supported by this browser.");
+            resolve(null);
+        };
+    }).then(function (position) {
+        if (position !== null && position !== undefined && position.code !== 1) {
+            let { latitude, longitude } = position.coords
+
+
+            return { latitude, longitude }
+        }
+        return null;
+    });
+}
+
+function coordinatesGeocoder(query) {
+    // match anything which looks like a decimal degrees coordinate pair
+    var matches = query.match(
+        /^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i
+    );
+    if (!matches) {
+        return null;
+    }
+
+    function coordinateFeature(lng, lat) {
+        return {
+            center: [lng, lat],
+            geometry: {
+                type: 'Point',
+                coordinates: [lng, lat]
+            },
+            place_name: 'Lat: ' + lat + ' Lng: ' + lng,
+            place_type: ['coordinate'],
+            properties: {},
+            type: 'Feature'
+        };
+    }
+
+    var coord1 = Number(matches[1]);
+    var coord2 = Number(matches[2]);
+    var geocodes = [];
+
+    if (coord1 < -90 || coord1 > 90) {
+        // must be lng, lat
+        geocodes.push(coordinateFeature(coord1, coord2));
+    }
+
+    if (coord2 < -90 || coord2 > 90) {
+        // must be lat, lng
+        geocodes.push(coordinateFeature(coord2, coord1));
+    }
+
+    if (geocodes.length === 0) {
+        // else could be either lng, lat or lat, lng
+        geocodes.push(coordinateFeature(coord1, coord2));
+        geocodes.push(coordinateFeature(coord2, coord1));
+    }
+
+    return geocodes;
+}
+
+
+function reverseGeocodingRequest(longitude, latitude) {
+    var req = mapGeocoder.geocoderService.reverseGeocode({ query: [longitude, latitude], types: ["poi"], limit: 1 })
+    return mapGeocoder.geocoderService.client.sendRequest(req).then(res => {
+        if (res && res.body && res.body.features && res.body.features.length > 0) {
+            return res.body.features[0].place_name
+        }
+        return ""
+    });
+
+}
+/*
+function generateThumbnailLink(longitude, latitude, token, width = 400, height = 300) {
+    // Marker API params: /static/ {name}-{label}+{color}({lon},{lat})
+    // name - Marker shape and size. Options are pin-s and pin-l.
+    return `https://api.mapbox.com/styles/v1/mapbox/${map.style.stylesheet.id}/static/pin-s+4668F2(${longitude},${latitude})/${longitude},${latitude},${map.getZoom()}}/${width}x${height}?access_token=${token}`
+}
+
+1*/

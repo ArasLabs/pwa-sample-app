@@ -1,0 +1,22 @@
+﻿<AML>
+ <Item type="Method" id="5A832082E4A14B5EAA513226298ACC58" action="add">
+  <execution_allowed_to keyed_name="World" type="Identity">A73B655731924CD0B027E4F4D5FCC0A9</execution_allowed_to>
+  <method_code><![CDATA[Innovator inn = this.getInnovator();
+
+string idList = this.getProperty("idList", "");
+
+
+Item file = inn.newItem("File", "get");
+file.setAttribute("select", "id,filename");
+file.setProperty("id", idList);
+file.setPropertyCondition("id", "in");
+
+
+Item locatedItems = file.createRelationship("Located", "get");
+locatedItems.setAttribute("select", "id,related_id,file_version,related_id(id,vault_url)");
+
+return file.apply();]]></method_code>
+  <method_type>C#</method_type>
+  <name>labs_getFileLocated</name>
+ </Item>
+</AML>
